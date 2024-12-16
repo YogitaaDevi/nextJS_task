@@ -34,6 +34,6 @@ export const fetchMembers = async (
 
     return matchesEngagementType;
   });
-  console.log(filteredData)
+  console.log(filteredData);
   return filteredData;
 };
