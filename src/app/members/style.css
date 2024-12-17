@@ -1,6 +1,7 @@
 .main__layout {
   width: 100%;
   margin-top: 80px;
+  overflow-y: hidden;
 }
 .main__layout__membersSide {
   padding: 0 0 0 45px;
@@ -71,8 +72,4 @@
 }
 .border-right {
   border-right: 0.1px solid rgb(135, 144, 157);
-}
-.layout__membersSide__mainpage {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
 }

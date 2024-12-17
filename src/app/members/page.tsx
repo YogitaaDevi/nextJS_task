@@ -6,13 +6,13 @@ import TextField from "@/components/textfield/TextField";
 import DisplayMembers from "@/components/displayMembers/DisplayMembers";
 import { fetchFilters, fetchMembers } from "@/service/apiService";
 
-const page = async() => {
+const page = async () => {
   const regions = await fetchFilters();
   return (
     <>
       <Header />
       <div className="flex main__layout">
-        <Sidebar data= {regions} />
+        <Sidebar data={regions} />
         <div className="flex flex-col main__layout__membersSide">
           <div className="layout__membersSide__header">
             <div className="flex gap-20">
@@ -56,9 +56,7 @@ const page = async() => {
               </div>
             </div>
           </div>
-          <div className="layout__membersSide__mainpage gap-20">
-            <DisplayMembers />
-          </div>
+          <DisplayMembers />
         </div>
       </div>
     </>
