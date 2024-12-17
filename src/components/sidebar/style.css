@@ -17,6 +17,7 @@
 .sidebar__header__text--clearFilter {
   font-size: 14px;
   color: rgb(21, 111, 248);
+  cursor: pointer;
 }
 .sidebar__filter {
   padding: 20px 30px;

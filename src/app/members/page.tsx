@@ -4,13 +4,15 @@ import Sidebar from "@/components/sidebar/Sidebar";
 import "./style.css";
 import TextField from "@/components/textfield/TextField";
 import DisplayMembers from "@/components/displayMembers/DisplayMembers";
+import { fetchFilters, fetchMembers } from "@/service/apiService";
 
-const page = () => {
+const page = async() => {
+  const regions = await fetchFilters();
   return (
     <>
       <Header />
       <div className="flex main__layout">
-        <Sidebar />
+        <Sidebar data= {regions} />
         <div className="flex flex-col main__layout__membersSide">
           <div className="layout__membersSide__header">
             <div className="flex gap-20">
