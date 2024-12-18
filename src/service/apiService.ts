@@ -1,11 +1,12 @@
 import { BASE_URL, PAGE_LIMIT } from "@/constants/constants";
 import { FilterType } from "@/types/filterType";
+import { memberEngagementType } from "@/types/memberEngagementType";
 import { MemberResponseType } from "@/types/memberResponseType";
 import { MemberType } from "@/types/memberType";
 
 export const fetchMembers = async (
   pageNumber: number,
-  appliedFilters: FilterType
+  appliedFilters: memberEngagementType
 ): Promise<MemberResponseType> => {
   try {
     const response = await fetch(
@@ -19,8 +20,7 @@ export const fetchMembers = async (
       !appliedFilters.officeHours &&
       !appliedFilters.openToCollaborate &&
       !appliedFilters.friends &&
-      !appliedFilters.newMembers &&
-      !appliedFilters.regions
+      !appliedFilters.newMembers
     )
       return data;
     const filteredData = data.members.filter((user: MemberType) => {
@@ -28,9 +28,7 @@ export const fetchMembers = async (
         (appliedFilters.officeHours && Boolean(user.officeHours)) ||
         (appliedFilters.openToCollaborate && user.openToWork) ||
         (appliedFilters.friends && user.plnFriend) ||
-        (appliedFilters.newMembers && user.isFeatured) ||
-        (appliedFilters.regions && user.location.continent)
-
+        (appliedFilters.newMembers && user.isFeatured)
       return matchesEngagementType;
     });
     return data = {count: filteredData.length, members: filteredData};
@@ -40,7 +38,7 @@ export const fetchMembers = async (
   }
 };
 
-export const fetchFilters = async (): Promise<any> => {
+export const fetchFilters = async (): Promise<FilterType> => {
   try {
     const response = await fetch(`${BASE_URL}/filters`);
 
@@ -48,7 +46,7 @@ export const fetchFilters = async (): Promise<any> => {
       throw new Error(`Error fetching filters: ${response.statusText}`);
     }
     const data = await response.json();
-    return data.regions;
+    return data;
   } catch (error) {
     console.error("Error in fetchFilters:", error);
     throw error;

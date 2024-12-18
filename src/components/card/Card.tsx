@@ -9,6 +9,8 @@ interface CardProps {
 }
 
 const Card = ({ member }: CardProps) => {
+  const visibleSkills = member.skills.slice(0, 2);
+  const count = member.skills.length > 2 ? member.skills.length - 2 : 0;
   return (
     <div className="card__container">
       <div className="card__container__profile">
@@ -21,9 +23,10 @@ const Card = ({ member }: CardProps) => {
           <p>Job</p>
         </div>
         <div className="member__skills">
-          {member.skills.map((skill: SkillType, index: number) => (
+          {visibleSkills.map((skill: SkillType, index: number) => (
             <SkillCard item={skill} key={index} />
           ))}
+          {count != 0 && <SkillCard count={count} />}
         </div>
       </div>
     </div>

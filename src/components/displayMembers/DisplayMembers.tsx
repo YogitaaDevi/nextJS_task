@@ -23,13 +23,11 @@ const DisplayMembers = () => {
     const openToCollaborate = searchParams.get("Collaborate") === "true";
     const friends = searchParams.get("Friends") === "true";
     const newMembers = searchParams.get("NewMembers") === "true";
-    const region = searchParams.get("region");
     return {
       officeHours,
       openToCollaborate,
       friends,
       newMembers,
-      region,
     };
   };
 
@@ -64,6 +62,10 @@ const DisplayMembers = () => {
   useEffect(() => {
     if (hasMore) getMembers(page);
   }, [page]);
+
+  const handleSearch = () => {
+    
+  }
 
   return (
     <>

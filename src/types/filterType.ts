@@ -1,7 +1,7 @@
 export interface FilterType{
-    officeHours?: boolean,
-    openToCollaborate?: boolean,
-    friends?: boolean,
-    newMembers?: boolean,
-    regions?: string
+    skills: string[],
+    cities: string[],
+    countries: string[],
+    regions: string[],
+    metroAreas: string[],
 }

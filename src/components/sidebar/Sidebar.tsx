@@ -4,9 +4,10 @@ import "./style.css";
 import { useRouter, useSearchParams } from "next/navigation";
 import TextField from "../textfield/TextField";
 import RegionCard from "../card/RegionCard";
+import { FilterType } from "@/types/filterType";
 
 interface SidebarProps {
-  data: string[];
+  data: FilterType;
 }
 const Sidebar = ({ data }: SidebarProps) => {
   const router = useRouter();
@@ -79,7 +80,15 @@ const Sidebar = ({ data }: SidebarProps) => {
         <div className="sidebar__filter__byregion flex flex-col">
           <div className="region-text">Region</div>
           <div className="region-names flex flex-wrap">
-            {data.map((item: string, index: number) => (
+            {data.regions.map((item: string, index: number) => (
+              <RegionCard item={item} key={index} />
+            ))}
+          </div>
+        </div>
+        <div className="sidebar__filter__byregion flex flex-col">
+          <div className="region-text">Country</div>
+          <div className="region-names flex flex-wrap">
+            {data.countries.map((item: string, index: number) => (
               <RegionCard item={item} key={index} />
             ))}
           </div>
