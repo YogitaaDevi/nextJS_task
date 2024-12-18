@@ -14,7 +14,7 @@ const Sidebar = ({ data }: SidebarProps) => {
   const currentParams = new URLSearchParams(searchParams.toString());
 
   const handleFilterChange = (filter: string, event?: any) => {
-    const isChecked = event?.target.checked;
+    const isChecked = event.target.checked;
     if (isChecked) currentParams.set(filter, "true");
     else currentParams.delete(filter);
     router.push(`?${currentParams.toString()}`);

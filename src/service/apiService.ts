@@ -1,41 +1,39 @@
 import { BASE_URL, PAGE_LIMIT } from "@/constants/constants";
 import { FilterType } from "@/types/filterType";
+import { MemberResponseType } from "@/types/memberResponseType";
 import { MemberType } from "@/types/memberType";
 
 export const fetchMembers = async (
   pageNumber: number,
   appliedFilters: FilterType
-): Promise<MemberType[]> => {
+): Promise<MemberResponseType> => {
   try {
     const response = await fetch(
-      `${BASE_URL}?pagination=true&page=${pageNumber}&limit=${PAGE_LIMIT}&selct=uid,name,location,skills,officeHours,openToWork,plnFriend,isFeatured`
+      `${BASE_URL}?pagination=true&page=${pageNumber}&limit=${PAGE_LIMIT}&select=uid,name,location,skills,officeHours,openToWork,plnFriend,isFeatured`
     );
-
     if (!response.ok) {
       throw new Error("Failed to fetch members");
     }
-    const data = await response.json();
-    const members = Array.isArray(data.members) ? data.members : [];
+    let data = await response.json();
     if (
       !appliedFilters.officeHours &&
       !appliedFilters.openToCollaborate &&
       !appliedFilters.friends &&
       !appliedFilters.newMembers &&
-      !appliedFilters.region
-    ) {
-      return members;
-    }
-    const filteredData = members.filter((user: MemberType) => {
+      !appliedFilters.regions
+    )
+      return data;
+    const filteredData = data.members.filter((user: MemberType) => {
       const matchesEngagementType =
         (appliedFilters.officeHours && Boolean(user.officeHours)) ||
         (appliedFilters.openToCollaborate && user.openToWork) ||
         (appliedFilters.friends && user.plnFriend) ||
-        (appliedFilters.newMembers && user.isFeatured);
+        (appliedFilters.newMembers && user.isFeatured) ||
+        (appliedFilters.regions && user.location.continent)
 
       return matchesEngagementType;
     });
-    console.log(filteredData);
-    return filteredData;
+    return data = {count: filteredData.length, members: filteredData};
   } catch (error) {
     console.error("Error in fetching the members:", error);
     throw error;

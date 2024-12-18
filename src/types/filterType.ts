@@ -3,5 +3,5 @@ export interface FilterType{
     openToCollaborate?: boolean,
     friends?: boolean,
     newMembers?: boolean,
-    region?: string
+    regions?: string
 }

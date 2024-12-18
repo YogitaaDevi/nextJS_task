@@ -8,13 +8,14 @@ import { fetchFilters, fetchMembers } from "@/service/apiService";
 
 const page = async () => {
   const regions = await fetchFilters();
+  // const member
   return (
     <>
       <Header />
       <div className="flex main__layout">
         <Sidebar data={regions} />
         <div className="flex flex-col main__layout__membersSide">
-          <div className="layout__membersSide__header">
+          {/* <div className="layout__membersSide__header">
             <div className="flex gap-20">
               <div className="flex items-baseline gap-7">
                 <h2 className="membersSide__header__text">Members</h2>
@@ -55,7 +56,7 @@ const page = async () => {
                 </div>
               </div>
             </div>
-          </div>
+          </div> */}
           <DisplayMembers />
         </div>
       </div>

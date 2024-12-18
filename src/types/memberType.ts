@@ -1,25 +1,13 @@
+import { LocationType } from "./locationType";
+import { SkillType } from "./skillType";
+
 export interface MemberType {
-  airtableRecId: string;
-  approvedAt: string;
-  bio: string | null;
-  createdAt: string;
-  discordHandler: string | null;
-  email: string;
-  externalId: string;
-  githubHandler: string | null;
-  imageUid: string;
-  isFeatured: boolean;
-  linkedinHandler: string | null;
-  locationUid: string;
-  moreDetails: string | null;
+  uid: string;
   name: string;
+  location: LocationType;
   officeHours: string | null;
   openToWork: boolean;
   plnFriend: boolean;
-  plnStartDate: string;
-  preferences: string | null;
-  telegramHandler: string | null;
-  twitterHandler: string | null;
-  uid: string;
-  updatedAt: string;
+  skills: SkillType[];
+  isFeatured: boolean;
 }

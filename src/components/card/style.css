@@ -1,6 +1,7 @@
 .card__container {
   background-color: white;
-  grid-row: span 15;
+  /* grid-row: span 15; */
+  height: 280px;
   border-radius: 12px;
   background: linear-gradient(180deg, rgb(244,246,250) 32%, white 0);
   text-align: center;
@@ -28,6 +29,9 @@
   width: 100%;
   border-bottom: 0.5px solid rgb(203, 213, 225);
   gap: 8px;
+}
+.member__skills{
+  margin-top: 12px;
 }
 .region__filter{
   gap: 20px;
