@@ -9,6 +9,7 @@ export const fetchMembers = async (
   appliedFilters: memberEngagementType
 ): Promise<MemberResponseType> => {
   try {
+    let filteredData;
     const response = await fetch(
       `${BASE_URL}?pagination=true&page=${pageNumber}&limit=${PAGE_LIMIT}&select=uid,name,location,skills,officeHours,openToWork,plnFriend,isFeatured`
     );
@@ -20,18 +21,24 @@ export const fetchMembers = async (
       !appliedFilters.officeHours &&
       !appliedFilters.openToCollaborate &&
       !appliedFilters.friends &&
-      !appliedFilters.newMembers
+      !appliedFilters.newMembers &&
+      !appliedFilters.searchMembers
     )
       return data;
-    const filteredData = data.members.filter((user: MemberType) => {
+
+    filteredData = data.members.filter((user: MemberType) => {
       const matchesEngagementType =
         (appliedFilters.officeHours && Boolean(user.officeHours)) ||
         (appliedFilters.openToCollaborate && user.openToWork) ||
         (appliedFilters.friends && user.plnFriend) ||
-        (appliedFilters.newMembers && user.isFeatured)
+        (appliedFilters.newMembers && user.isFeatured) ||
+        (appliedFilters.searchMembers &&
+          user.name
+            .toLowerCase()
+            .includes(appliedFilters.searchMembers.toLowerCase()));
       return matchesEngagementType;
     });
-    return data = {count: filteredData.length, members: filteredData};
+    return (data = { count: filteredData.length, members: filteredData });
   } catch (error) {
     console.error("Error in fetching the members:", error);
     throw error;

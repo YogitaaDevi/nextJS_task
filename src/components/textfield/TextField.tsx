@@ -2,11 +2,13 @@ import React from "react";
 
 interface TextFieldProps {
   type: string;
+  value?: string;
   placeholder?: string;
   className?: string;
   onChange?: (e: any) => void;
   onClick?: (e: any) => void;
-  checked?: boolean
+  checked?: boolean;
+  onKeyDown?: (e: any) => void;
 }
 
 const TextField = ({
@@ -15,6 +17,7 @@ const TextField = ({
   type = "text",
   placeholder = "",
   onClick,
+  onKeyDown,
 }: TextFieldProps) => {
   return (
     <input
@@ -23,6 +26,7 @@ const TextField = ({
       onChange={onChange}
       placeholder={placeholder}
       onClick={onClick}
+      onKeyDown={onKeyDown}
     />
   );
 };

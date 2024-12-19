@@ -14,7 +14,6 @@ const SkillCard = ({ item, count }: SkillCardProps) => {
     }
     return text;
   };
-  console.log(count);
   return (
     <>
       {item && (

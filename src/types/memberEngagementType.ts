@@ -3,4 +3,5 @@ export interface memberEngagementType{
     openToCollaborate?: boolean,
     friends?: boolean,
     newMembers?: boolean,
+    searchMembers?: string
 }

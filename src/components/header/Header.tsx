@@ -34,10 +34,10 @@ const Header = () => {
         </div>
       </div>
       <div className="header__right flex">
-        <button className="header__right__button p-10-40 radius-25 h-40">
-          Join the network
+        <button className="header__right__button p-10-14 radius-25 h-40">
+          Sign up
         </button>
-        <button className="header__right__button radius-15 p-10-20">
+        <button className="header__right__button radius-25 p-10-14">
           Login
         </button>
       </div>
