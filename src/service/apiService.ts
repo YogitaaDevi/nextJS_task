@@ -9,36 +9,66 @@ export const fetchMembers = async (
   appliedFilters: memberEngagementType
 ): Promise<MemberResponseType> => {
   try {
-    let filteredData;
     const response = await fetch(
       `${BASE_URL}?pagination=true&page=${pageNumber}&limit=${PAGE_LIMIT}&select=uid,name,location,skills,officeHours,openToWork,plnFriend,isFeatured`
     );
+
     if (!response.ok) {
       throw new Error("Failed to fetch members");
     }
-    let data = await response.json();
-    if (
-      !appliedFilters.officeHours &&
-      !appliedFilters.openToCollaborate &&
-      !appliedFilters.friends &&
-      !appliedFilters.newMembers &&
-      !appliedFilters.searchMembers
-    )
-      return data;
 
-    filteredData = data.members.filter((user: MemberType) => {
-      const matchesEngagementType =
-        (appliedFilters.officeHours && Boolean(user.officeHours)) ||
-        (appliedFilters.openToCollaborate && user.openToWork) ||
-        (appliedFilters.friends && user.plnFriend) ||
-        (appliedFilters.newMembers && user.isFeatured) ||
-        (appliedFilters.searchMembers &&
-          user.name
-            .toLowerCase()
-            .includes(appliedFilters.searchMembers.toLowerCase()));
-      return matchesEngagementType;
+    const data = await response.json();
+    const {
+      officeHours,
+      openToCollaborate,
+      friends,
+      newMembers,
+      searchMembers,
+      sortMembers,
+    } = appliedFilters;
+
+    if (
+      !officeHours &&
+      !openToCollaborate &&
+      !friends &&
+      !newMembers &&
+      !searchMembers
+    ) {
+      return {
+        count: data.count,
+        members: sortMembers
+          ? data.members.sort((a: MemberType, b: MemberType) =>
+              sortMembers === "Descending"
+                ? b.name.localeCompare(a.name)
+                : a.name.localeCompare(b.name)
+            )
+          : data.members.sort((a: MemberType, b: MemberType) =>
+              a.name.localeCompare(b.name)
+            ),
+      };
+    }
+
+    const filteredData = data.members.filter((user: MemberType) => {
+      const matchesFilter =
+        (officeHours && Boolean(user.officeHours)) ||
+        (openToCollaborate && user.openToWork) ||
+        (friends && user.plnFriend) ||
+        (newMembers && user.isFeatured) ||
+        (searchMembers &&
+          user.name.toLowerCase().includes(searchMembers.toLowerCase()));
+      return matchesFilter;
     });
-    return (data = { count: filteredData.length, members: filteredData });
+
+    const sortedData = filteredData.sort((a: MemberType, b: MemberType) =>
+      sortMembers === "Descending"
+        ? b.name.localeCompare(a.name)
+        : a.name.localeCompare(b.name)
+    );
+
+    return {
+      count: sortedData.length,
+      members: sortedData,
+    };
   } catch (error) {
     console.error("Error in fetching the members:", error);
     throw error;
@@ -48,12 +78,10 @@ export const fetchMembers = async (
 export const fetchFilters = async (): Promise<FilterType> => {
   try {
     const response = await fetch(`${BASE_URL}/filters`);
-
     if (!response.ok) {
       throw new Error(`Error fetching filters: ${response.statusText}`);
     }
-    const data = await response.json();
-    return data;
+    return await response.json();
   } catch (error) {
     console.error("Error in fetchFilters:", error);
     throw error;

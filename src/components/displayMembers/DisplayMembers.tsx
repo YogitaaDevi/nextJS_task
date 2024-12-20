@@ -19,6 +19,8 @@ const DisplayMembers = () => {
   const [searchBy, setSearchBy] = useState<string>("");
   const [count, setCount] = useState<number>(0);
   const [cardView, setCardView] = useState<string>("");
+  const [order, setOrder] = useState<string>("Ascending");
+  const [isOrder, setIsOrder] = useState<boolean>(false);
   const router = useRouter();
   const searchParams = useSearchParams();
   const currentParams = new URLSearchParams(searchParams.toString());
@@ -30,12 +32,14 @@ const DisplayMembers = () => {
     const friends = searchParams.get("Friends") === "true";
     const newMembers = searchParams.get("NewMembers") === "true";
     const searchMembers = searchParams.get("searchBy") || "";
+    const sortMembers = searchParams.get("sortBy") || "";
     return {
       officeHours,
       openToCollaborate,
       friends,
       newMembers,
       searchMembers,
+      sortMembers,
     };
   };
 
@@ -45,6 +49,7 @@ const DisplayMembers = () => {
     try {
       const appliedFilters = filterChange();
       response = await fetchMembers(pageNo, appliedFilters);
+      // console.log(response.members);
       if (response.members) {
         setCurrentMembers((prev) => [...prev, ...response.members]);
         setCount(response.count);
@@ -57,7 +62,6 @@ const DisplayMembers = () => {
       setLoading(false);
     }
   };
-
   const { observerRef, page, setPage } = useInfinityScroll(hasMore, loading);
 
   useEffect(() => {
@@ -82,8 +86,13 @@ const DisplayMembers = () => {
     currentParams.delete("searchBy");
     router.push("?");
   };
-  console.log(currentMembers);
-  console.log(searchBy);
+
+  const handleSort = (order: string) => {
+    setOrder(order);
+    currentParams.set("sortBy", order);
+    router.push(`?sortBy=${order}`);
+  };
+
   return (
     <>
       <div className="layout__membersSide__header">
@@ -120,18 +129,61 @@ const DisplayMembers = () => {
           <div className="flex gap-20 justify-between membersSide__header__sort">
             <div className="flex sort__text">
               <p>Sort by: </p>
-              <div className="sort__order flex items-center justify-between">
-                <img
-                  src="/icons/ascending-gray.svg"
-                  alt="Sort Ascending"
-                  className="sort__order__by"
-                />
-                <p>Ascending</p>
-                <img
-                  src="/icons/dropdown-gray.svg"
-                  alt="Sort Dropdown"
-                  className="sort__order__by"
-                />
+              <div
+                className="relative"
+                onClick={() => setIsOrder((prev) => !prev)}
+              >
+                <div className="sort__order flex items-center justify-between">
+                  <img
+                    src="/icons/ascending-gray.svg"
+                    alt="Sort Ascending"
+                    className="sort__order__by"
+                  />
+                  <p>{order}</p>
+                  <img
+                    src="/icons/dropdown-gray.svg"
+                    alt="Sort Dropdown"
+                    className="sort__order__by"
+                  />
+                  <div
+                    className={
+                      isOrder
+                        ? "sort__order sort__order--visible h-80 flex flex-col"
+                        : "sort__order--hidden"
+                    }
+                  >
+                    <div
+                      className={
+                        order === "Ascending"
+                          ? "flex color__active h-40 items-center gap-5"
+                          : "flex h-40 items-center gap-5"
+                      }
+                      onClick={() => handleSort("Ascending")}
+                    >
+                      <img
+                        src="/icons/ascending-gray.svg"
+                        alt="Sort Ascending"
+                        className="sort__order__by"
+                      />
+                      <p>Ascending</p>
+                    </div>
+                    <div
+                      className={
+                        order === "Descending"
+                          ? "flex color__active h-40 items-center gap-5"
+                          : "flex h-40 items-center gap-5`"
+                      }
+                      onClick={() => handleSort("Descending")}
+                    >
+                      <img
+                        src="/icons/descending-black.svg"
+                        alt="Sort Ascending"
+                        className="sort__order__by"
+                      />
+                      <p>Descending</p>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
             <div className="sort__view flex">
