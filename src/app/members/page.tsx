@@ -15,7 +15,6 @@ const page = async () => {
       <div className="flex main__layout">
         <Sidebar data={data} roles={roles} />
         <div className="flex flex-col main__layout__membersSide">
-          <MembersFilter />
           <DisplayMembers />
         </div>
       </div>

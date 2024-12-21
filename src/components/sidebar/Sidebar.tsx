@@ -19,7 +19,6 @@ const Sidebar = ({ data, roles }: SidebarProps) => {
   const currentParams = new URLSearchParams(searchParams.toString());
   const [count, setCount] = useState<number>(INITIAL_VISIBLE_COUNT);
   const [isVisible, setIsVisible] = useState<boolean>(false);
-
   const handleFilterChange = (filter: string, event?: any) => {
     const isChecked = event.target.checked;
     if (isChecked) currentParams.set(filter, "true");
@@ -110,11 +109,35 @@ const Sidebar = ({ data, roles }: SidebarProps) => {
         <div className="sidebar__filter__bycountries flex flex-col">
           <div className="region-text">Country</div>
           <div className="region-names flex flex-wrap">
-            {data.countries
-              .slice(0, count)
-              .map((item: string, index: number) => (
-                <RegionCard item={item} key={index} />
-              ))}
+            {isVisible
+              ? data.countries.map((item: string, index: number) => (
+                  <RegionCard item={item} key={index} />
+                ))
+              : data.countries
+                  .slice(0, INITIAL_VISIBLE_COUNT)
+                  .map((item: string, index: number) => (
+                    <RegionCard item={item} key={index} />
+                  ))}
+            <div
+              className="region-hidden flex items-center"
+              onClick={() => setIsVisible((prev) => !prev)}
+            >
+              {isVisible ? (
+                <>
+                  Show less <img src="/icons/filter-dropdown.svg" alt="" />
+                  <div className="region-count flex justify-center items-center">
+                    {0}
+                  </div>
+                </>
+              ) : (
+                <>
+                  Show more <img src="/icons/filter-dropdown.svg" alt="" />
+                  <div className="region-count flex justify-center items-center">
+                    {data.countries.length - INITIAL_VISIBLE_COUNT}
+                  </div>
+                </>
+              )}
+            </div>
           </div>
         </div>
         <div className="sidebar__filter__bycountries flex flex-col">

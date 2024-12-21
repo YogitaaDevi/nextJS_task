@@ -1,12 +1,20 @@
-'use client'
+"use client";
 import React, { useState } from "react";
 import TextField from "../textfield/TextField";
 import { useRouter, useSearchParams } from "next/navigation";
-import './style.css'
+import "./style.css";
 
-const MembersFilter = () => {
-  const [count, setCount] = useState<number>(0);
-  const [cardView, setCardView] = useState<string>("");
+interface MembersFilterProps {
+  count: number;
+  cardView: string;
+  setCardView: (e: any) => void;
+}
+
+const MembersFilter = ({
+  count,
+  cardView,
+  setCardView,
+}: MembersFilterProps) => {
   const [order, setOrder] = useState<string>("Ascending");
   const [isOrder, setIsOrder] = useState<boolean>(false);
   const [searchBy, setSearchBy] = useState<string>("");
@@ -50,7 +58,7 @@ const MembersFilter = () => {
             }
             onKeyDown={handleSearch}
           />
-          <div className="flex gap-5">
+          <div className="flex gap-55">
             <img
               src="/icons/close-gray.svg"
               alt="Close Icon"
