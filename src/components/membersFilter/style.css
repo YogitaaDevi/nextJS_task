@@ -15,7 +15,7 @@
 }
 .layout__membersSide__header {
   height: 90px;
-  padding: 43px 0 10px 0;
+  padding: 43px 45px 10px 45px;
   background-color: rgb(241, 245, 249);
   position: fixed;
 }
@@ -111,7 +111,7 @@
 .h-80 {
   height: 90px;
 }
-.sort__order--hidden{
+.sort__order--hidden {
   display: none;
 }
 .sort__order--visible {
@@ -132,8 +132,4 @@
 .h-40 {
   height: 40px;
   padding: 5px;
-}
-.p{
-  padding: 0 0 0 45px;
-  margin-top: 10px;
 }

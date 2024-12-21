@@ -3,6 +3,7 @@ import { FilterType } from "@/types/filterType";
 import { memberEngagementType } from "@/types/memberEngagementType";
 import { MemberResponseType } from "@/types/memberResponseType";
 import { MemberType } from "@/types/memberType";
+import { RoleType } from "@/types/roleType";
 
 export const fetchMembers = async (
   pageNumber: number,
@@ -84,6 +85,18 @@ export const fetchFilters = async (): Promise<FilterType> => {
     return await response.json();
   } catch (error) {
     console.error("Error in fetchFilters:", error);
+    throw error;
+  }
+};
+
+export const fetchRoles = async (): Promise<RoleType[]> => {
+  try {
+    const response = await fetch(`${BASE_URL}/roles`);
+    if (!response.ok) {
+      throw new Error(`Error fetching Roles: ${response.statusText}`);
+    }
+    return await response.json();
+  } catch (error) {
     throw error;
   }
 };

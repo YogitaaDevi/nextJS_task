@@ -1,18 +1,24 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import "./style.css";
 import { useRouter, useSearchParams } from "next/navigation";
 import TextField from "../textfield/TextField";
 import RegionCard from "../card/RegionCard";
 import { FilterType } from "@/types/filterType";
+import { INITIAL_VISIBLE_COUNT } from "@/constants/constants";
+import { RoleType } from "@/types/roleType";
+import RoleCard from "../card/RoleCard";
 
 interface SidebarProps {
   data: FilterType;
+  roles?: RoleType[];
 }
-const Sidebar = ({ data }: SidebarProps) => {
+const Sidebar = ({ data, roles }: SidebarProps) => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const currentParams = new URLSearchParams(searchParams.toString());
+  const [count, setCount] = useState<number>(INITIAL_VISIBLE_COUNT);
+  const [isVisible, setIsVisible] = useState<boolean>(false);
 
   const handleFilterChange = (filter: string, event?: any) => {
     const isChecked = event.target.checked;
@@ -85,10 +91,36 @@ const Sidebar = ({ data }: SidebarProps) => {
             ))}
           </div>
         </div>
-        <div className="sidebar__filter__byregion flex flex-col">
+        <div className="sidebar__filter__bycountries flex flex-col">
+          <div className="region-text">Roles</div>
+          <div className="filter__bysearch flex items-center">
+            <img src="/icons/search-gray.svg" alt="" className="search_icon" />
+            <TextField
+              type="text"
+              className="search_input"
+              placeholder="Search Role [eg. Engineer]"
+            />
+          </div>
+          <div className="flex flex-col gap-5">
+            {roles?.map((role, index: number) => (
+              <RoleCard key={index} role={role} />
+            ))}
+          </div>
+        </div>
+        <div className="sidebar__filter__bycountries flex flex-col">
           <div className="region-text">Country</div>
           <div className="region-names flex flex-wrap">
-            {data.countries.map((item: string, index: number) => (
+            {data.countries
+              .slice(0, count)
+              .map((item: string, index: number) => (
+                <RegionCard item={item} key={index} />
+              ))}
+          </div>
+        </div>
+        <div className="sidebar__filter__bycountries flex flex-col">
+          <div className="region-text">Skills</div>
+          <div className="region-names flex flex-wrap">
+            {data.skills.slice(0, count).map((item: string, index: number) => (
               <RegionCard item={item} key={index} />
             ))}
           </div>
