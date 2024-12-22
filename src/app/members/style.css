@@ -6,4 +6,5 @@
 .main__layout__membersSide {
   gap: 20px;
   margin-left: 300px;
+  width: 100%;
 }

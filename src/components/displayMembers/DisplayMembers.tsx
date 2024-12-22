@@ -1,9 +1,9 @@
 "use client";
+
 import { MemberType } from "@/types/memberType";
 import Card from "../card/Card";
 import Loader from "../loader/Loader";
 import useInfinityScroll from "@/hooks/useInfinityScroll";
-import "./style.css";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { fetchMembers } from "@/service/apiService";
@@ -17,33 +17,29 @@ const DisplayMembers = () => {
   const [hasMore, setHasMore] = useState<boolean>(true);
   const [loading, setLoading] = useState<boolean>(false);
   const [count, setCount] = useState<number>(0);
-  const [cardView, setCardView] = useState<string>("");
+  const [cardView, setCardView] = useState<string>("Grid");
   const searchParams = useSearchParams();
-  let response: MemberResponseType;
+  const { observerRef, page, setPage } = useInfinityScroll(hasMore, loading);
 
-  const filterChange = (): memberEngagementType => {
-    const officeHours = searchParams.get("OfficeHours") === "true";
-    const openToCollaborate = searchParams.get("Collaborate") === "true";
-    const friends = searchParams.get("Friends") === "true";
-    const newMembers = searchParams.get("NewMembers") === "true";
-    const searchMembers = searchParams.get("searchBy") || "";
-    const sortMembers = searchParams.get("sortBy") || "";
-    return {
-      officeHours,
-      openToCollaborate,
-      friends,
-      newMembers,
-      searchMembers,
-      sortMembers,
-    };
-  };
+  const filterChange = (): memberEngagementType => ({
+    officeHours: searchParams.get("OfficeHours") === "true",
+    openToCollaborate: searchParams.get("Collaborate") === "true",
+    friends: searchParams.get("Friends") === "true",
+    newMembers: searchParams.get("NewMembers") === "true",
+    searchMembers: searchParams.get("searchBy") || "",
+    sortMembers: searchParams.get("sortBy") || "",
+  });
 
   const getMembers = async (pageNo: number) => {
     if (loading) return;
     setLoading(true);
     try {
       const appliedFilters = filterChange();
-      response = await fetchMembers(pageNo, appliedFilters);
+      const response: MemberResponseType = await fetchMembers(
+        pageNo,
+        appliedFilters
+      );
+
       if (response.members) {
         setCurrentMembers((prev) => [...prev, ...response.members]);
         setCount(response.count);
@@ -56,14 +52,13 @@ const DisplayMembers = () => {
       setLoading(false);
     }
   };
-  const { observerRef, page, setPage } = useInfinityScroll(hasMore, loading);
 
   useEffect(() => {
     setCurrentMembers([]);
     setHasMore(true);
     setLoading(false);
     setPage(1);
-  }, [searchParams]);
+  }, [searchParams, setPage]);
 
   useEffect(() => {
     if (hasMore) getMembers(page);
@@ -76,8 +71,8 @@ const DisplayMembers = () => {
         cardView={cardView}
         setCardView={setCardView}
       />
-      <div className="p">
-        {cardView == "List" ? (
+      <div className="container">
+        {cardView === "List" ? (
           <div className="display__members__list">
             {currentMembers.map((user: MemberType) => (
               <ListCard key={user.uid} member={user} />
@@ -90,13 +85,35 @@ const DisplayMembers = () => {
             ))}
           </div>
         )}
-        <div
-          ref={observerRef}
-          className="display__loader flex items-center justify-center"
-        >
+        <div ref={observerRef} className="display__loader">
           {hasMore && <Loader />}
         </div>
       </div>
+      <style jsx>{`
+        .container {
+          padding: 0 50px;
+          margin-top: 10px;
+          width: 100%;
+        }
+        .display__members__grid {
+          margin-top: 100px;
+          display: grid;
+          grid-template-columns: repeat(3, 1fr);
+          gap: 20px;
+        }
+        .display__members__list {
+          margin-top: 100px;
+          display: flex;
+          flex-direction: column;
+          gap: 20px;
+        }
+        .display__loader {
+          width: 100%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+      `}</style>
     </>
   );
 };
