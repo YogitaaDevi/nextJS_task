@@ -7,13 +7,13 @@ interface RegionCardProps {
 
 const RegionCard = ({ item }: RegionCardProps) => {
   return (
-    <div className="region__filter flex">
-      <Button className="region__filter__name" name={item} />
+    <div className="filter flex">
+      <Button className="filter__name" name={item} />
       <style jsx>{`
-        .region__filter {
+        .filter {
           gap: 20px;
         }
-        :global(.region__filter__name) {
+        :global(.filter__name) {
           height: 25px;
           padding: 3px 10px;
           border-radius: 50px;

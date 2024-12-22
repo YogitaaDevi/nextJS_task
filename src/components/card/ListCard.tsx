@@ -13,17 +13,21 @@ const ListCard = ({ member }: ListCardProps) => {
 
   return (
     <div className="list__card flex justify-between items-center">
-      <div className="list__card__members flex">
-        <img src="/icons/profile.jpg" alt="" className="profile-img-list" />
-        <div className="flex flex-col card__members__details">
-          <p className="members__details__name">{member.name}</p>
-          <div className="flex card__members__details">
+      <div className="list__card__member flex">
+        <img
+          src="/icons/profile.jpg"
+          alt=""
+          className="card__member__profile"
+        />
+        <div className="flex flex-col card__member__detail">
+          <p className="member__detail__name">{member.name}</p>
+          <div className="flex card__member__detail">
             <p>place</p>
             <p>job</p>
           </div>
         </div>
       </div>
-      <div className="member__skills">
+      <div className="card__member__skills">
         {visibleSkills.map((skill: SkillType, index: number) => (
           <SkillCard item={skill} key={index} />
         ))}
@@ -40,21 +44,21 @@ const ListCard = ({ member }: ListCardProps) => {
           padding: 0 20px;
         }
 
-        .list__card__members {
+        .list__card__member {
           gap: 15px;
         }
 
-        .profile-img-list {
+        .card__member__profile {
           width: 70px;
           height: 70px;
           border-radius: 50%;
         }
 
-        .card__members__details {
+        .card__member__detail {
           gap: 6px;
         }
 
-        .members__details__name {
+        .member__detail__name {
           font-weight: 600;
           font-size: 18px;
         }

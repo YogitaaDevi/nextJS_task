@@ -10,7 +10,7 @@ const Header = () => {
             <img
               src="/icons/app-logo.svg"
               alt="app-logo"
-              className="app-logo"
+              className="logo__app"
             />
           </div>
           <div className="header__left__nav flex items-center">
@@ -65,7 +65,7 @@ const Header = () => {
         .header__left__logo {
           height: 100%;
         }
-        .app-logo {
+        .logo__app {
           width: 155px;
           height: 100%;
         }

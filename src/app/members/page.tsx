@@ -4,16 +4,15 @@ import Sidebar from "@/components/sidebar/Sidebar";
 import "./style.css";
 import DisplayMembers from "@/components/displayMembers/DisplayMembers";
 import { fetchFilters, fetchMembers, fetchRoles } from "@/service/apiService";
-import MembersFilter from "@/components/membersFilter/MembersFilter";
 
 const page = async () => {
   const data = await fetchFilters();
-  const roles = await fetchRoles();
+  // const roles = await fetchRoles();
   return (
     <>
       <Header />
       <div className="flex main__layout">
-        <Sidebar data={data} roles={roles} />
+        <Sidebar data={data}/>
         <div className="flex flex-col main__layout__membersSide">
           <DisplayMembers />
         </div>

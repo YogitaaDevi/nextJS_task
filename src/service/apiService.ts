@@ -1,13 +1,13 @@
 import { BASE_URL, PAGE_LIMIT } from "@/constants/constants";
 import { FilterType } from "@/types/filterType";
-import { memberEngagementType } from "@/types/memberEngagementType";
+import { memberFilterType } from "@/types/memberFilterType";
 import { MemberResponseType } from "@/types/memberResponseType";
 import { MemberType } from "@/types/memberType";
 import { RoleType } from "@/types/roleType";
 
 export const fetchMembers = async (
   pageNumber: number,
-  appliedFilters: memberEngagementType
+  appliedFilters: memberFilterType
 ): Promise<MemberResponseType> => {
   try {
     const response = await fetch(
@@ -89,13 +89,20 @@ export const fetchFilters = async (): Promise<FilterType> => {
   }
 };
 
-export const fetchRoles = async (): Promise<RoleType[]> => {
+export const fetchRoles = async (value?: string): Promise<RoleType[]> => {
   try {
-    const response = await fetch(`${BASE_URL}/roles`);
-    if (!response.ok) {
-      throw new Error(`Error fetching Roles: ${response.statusText}`);
+    let response;
+    if (value?.length) {
+      response = await fetch(`${BASE_URL}/roles?searchText=${value}`);
+      const data = await response.json();
+      const sortedRoles = data.sort((a: RoleType, b: RoleType) =>
+        a.role.localeCompare(b.role)
+      );
+      return sortedRoles;
+    } else {
+      response = await fetch(`${BASE_URL}/roles`);
+      return await response.json();
     }
-    return await response.json();
   } catch (error) {
     throw error;
   }

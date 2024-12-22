@@ -17,12 +17,9 @@ const SkillCard = ({ item, count }: SkillCardProps) => {
   return (
     <>
       {item && (
-        <Button
-          className="region__filter__name"
-          name={truncateSkill(item.title)}
-        />
+        <Button className="filter__name" name={truncateSkill(item.title)} />
       )}
-      {count && <span className="region__filter__name">+ {count}</span>}
+      {count && <span className="filter__name">+ {count}</span>}
     </>
   );
 };

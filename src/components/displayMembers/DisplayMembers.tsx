@@ -8,7 +8,7 @@ import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { fetchMembers } from "@/service/apiService";
 import { MemberResponseType } from "@/types/memberResponseType";
-import { memberEngagementType } from "@/types/memberEngagementType";
+import { memberFilterType } from "@/types/memberFilterType";
 import ListCard from "../card/ListCard";
 import MembersFilter from "../membersFilter/MembersFilter";
 
@@ -20,14 +20,16 @@ const DisplayMembers = () => {
   const [cardView, setCardView] = useState<string>("Grid");
   const searchParams = useSearchParams();
   const { observerRef, page, setPage } = useInfinityScroll(hasMore, loading);
+  const viewType = searchParams.get("viewType");
 
-  const filterChange = (): memberEngagementType => ({
+  const filterChange = (): memberFilterType => ({
     officeHours: searchParams.get("OfficeHours") === "true",
     openToCollaborate: searchParams.get("Collaborate") === "true",
     friends: searchParams.get("Friends") === "true",
     newMembers: searchParams.get("NewMembers") === "true",
     searchMembers: searchParams.get("searchBy") || "",
     sortMembers: searchParams.get("sortBy") || "",
+    memberRoles: searchParams.get("memberRole") || "",
   });
 
   const getMembers = async (pageNo: number) => {
@@ -66,13 +68,9 @@ const DisplayMembers = () => {
 
   return (
     <>
-      <MembersFilter
-        count={count}
-        cardView={cardView}
-        setCardView={setCardView}
-      />
-      <div className="container">
-        {cardView === "List" ? (
+      <MembersFilter count={count} />
+      <div className="display__members">
+        {viewType === "List" ? (
           <div className="display__members__list">
             {currentMembers.map((user: MemberType) => (
               <ListCard key={user.uid} member={user} />
@@ -90,7 +88,7 @@ const DisplayMembers = () => {
         </div>
       </div>
       <style jsx>{`
-        .container {
+        .display__members {
           padding: 0 50px;
           margin-top: 10px;
           width: 100%;

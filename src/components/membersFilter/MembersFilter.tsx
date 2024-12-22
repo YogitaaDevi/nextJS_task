@@ -1,25 +1,21 @@
-"use client"; // Ensure this is a Client Component
+"use client";
+
 import React, { useState } from "react";
 import TextField from "../textfield/TextField";
 import { useRouter, useSearchParams } from "next/navigation";
 
 interface MembersFilterProps {
   count: number;
-  cardView: string;
-  setCardView: (e: any) => void;
 }
 
-const MembersFilter = ({
-  count,
-  cardView,
-  setCardView,
-}: MembersFilterProps) => {
-  const [order, setOrder] = useState<string>("Ascending");
+const MembersFilter = ({ count }: MembersFilterProps) => {
   const [isOrder, setIsOrder] = useState<boolean>(false);
   const [searchBy, setSearchBy] = useState<string>("");
   const router = useRouter();
   const searchParams = useSearchParams();
   const currentParams = new URLSearchParams(searchParams.toString());
+  const viewType = searchParams.get("viewType");
+  const sortType = searchParams.get("sortBy");
 
   const handleSearch = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === "Enter" && searchBy) {
@@ -34,26 +30,29 @@ const MembersFilter = ({
     router.push("?");
   };
 
+  const handleCardView = (value: string) => {
+    currentParams.set("viewType", value);
+    router.push(`?viewType=${value}`);
+  };
   const handleSort = (order: string) => {
-    setOrder(order);
     currentParams.set("sortBy", order);
     router.push(`?sortBy=${order}`);
   };
 
   return (
     <>
-      <div className="layout__membersSide__header">
-        <div className="flex gap-20">
+      <div className="memberside">
+        <div className="flex gap-20 memberside__header">
           <div className="flex items-baseline gap-7">
-            <h1 className="membersSide__header__text">Members</h1>
-            <div className="membersSide__header__number">({count})</div>
+            <h1 className="memberside__header__text">Members</h1>
+            <div className="memberside__header__count">({count})</div>
           </div>
-          <div className="membersSide__header__search flex items-center">
+          <div className="memberside__header__search flex items-center">
             <TextField
               type="text"
               value={searchBy}
               placeholder="Search by Member Name, Team or Project"
-              className="search__input"
+              className="header__search__input"
               onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                 setSearchBy(e.target.value)
               }
@@ -65,43 +64,43 @@ const MembersFilter = ({
                 alt="Close Icon"
                 className={
                   searchBy.length > 0
-                    ? "search__closeIcon--visible"
-                    : "search__closeIcon--hidden"
+                    ? "header__search__closeIcon--visible"
+                    : "header__search__closeIcon--hidden"
                 }
                 onClick={handleClearSearch}
               />
               <img src="/icons/search.svg" alt="Search Icon" />
             </div>
           </div>
-          <div className="flex gap-20 justify-between membersSide__header__sort">
-            <div className="flex sort__text">
-              <p>Sort by: </p>
+          <div className="flex gap-20 justify-between memberside__header__sort">
+            <div className="flex header__sort__view">
+              Sort by:
               <div
                 className="relative"
                 onClick={() => setIsOrder((prev) => !prev)}
               >
-                <div className="sort__order flex items-center justify-between">
+                <div className="sort__view__order flex items-center justify-between">
                   <img
                     src="/icons/ascending-gray.svg"
                     alt="Sort Ascending"
-                    className="sort__order__by"
+                    className="view__order__type"
                   />
-                  <p>{order}</p>
+                  <p>{viewType}</p>
                   <img
                     src="/icons/dropdown-gray.svg"
                     alt="Sort Dropdown"
-                    className="sort__order__by"
+                    className="view__order__type"
                   />
                   <div
                     className={
                       isOrder
-                        ? "sort__order sort__order--visible h-80 flex flex-col"
-                        : "sort__order--hidden"
+                        ? "sort__view__order sort__view__order--visible h-80 flex flex-col"
+                        : "sort__view__order--hidden"
                     }
                   >
                     <div
                       className={
-                        order === "Ascending"
+                        sortType === "Ascending"
                           ? "flex color__active h-40 items-center gap-5"
                           : "flex h-40 items-center gap-5"
                       }
@@ -110,13 +109,13 @@ const MembersFilter = ({
                       <img
                         src="/icons/ascending-gray.svg"
                         alt="Sort Ascending"
-                        className="sort__order__by"
+                        className="view__order__type"
                       />
                       <p>Ascending</p>
                     </div>
                     <div
                       className={
-                        order === "Descending"
+                        sortType === "Descending"
                           ? "flex color__active h-40 items-center gap-5"
                           : "flex h-40 items-center gap-5"
                       }
@@ -125,7 +124,7 @@ const MembersFilter = ({
                       <img
                         src="/icons/descending-black.svg"
                         alt="Sort Descending"
-                        className="sort__order__by"
+                        className="view__order__type"
                       />
                       <p>Descending</p>
                     </div>
@@ -136,7 +135,7 @@ const MembersFilter = ({
             <div className="sort__view flex">
               <div
                 className={
-                  cardView === "List"
+                  viewType === "List"
                     ? "sort__view__grid flex items-center justify-center"
                     : "sort__view__grid--active sort__view__grid flex items-center justify-center"
                 }
@@ -144,12 +143,12 @@ const MembersFilter = ({
                 <img
                   src="/icons/grid-selected.svg"
                   alt="Grid View"
-                  onClick={() => setCardView("")}
+                  onClick={() => handleCardView("Grid")}
                 />
               </div>
               <div
                 className={
-                  cardView === "List"
+                  viewType === "List"
                     ? "sort__view__list--active sort__view__list flex items-center justify-center"
                     : "sort__view__list flex items-center justify-center"
                 }
@@ -157,7 +156,7 @@ const MembersFilter = ({
                 <img
                   src="/icons/list-selected.svg"
                   alt="List View"
-                  onClick={() => setCardView("List")}
+                  onClick={() => handleCardView("List")}
                 />
               </div>
             </div>
@@ -166,7 +165,7 @@ const MembersFilter = ({
       </div>
 
       <style jsx>{`
-        .layout__membersSide__header {
+        .memberside {
           height: 90px;
           padding: 43px 40px 0px 40px;
           background-color: rgb(241, 245, 249);
@@ -181,14 +180,14 @@ const MembersFilter = ({
         .gap-20 {
           gap: 20px;
         }
-        .membersSide__header__text {
+        .memberside__header__text {
           font-size: 30px;
         }
-        .membersSide__header__number {
+        .memberside__header__count {
           font-size: 14px;
           color: rgb(109, 120, 139);
         }
-        .membersSide__header__search {
+        .memberside__header__search {
           width: 340px;
           height: 40px;
           background-color: white;
@@ -197,22 +196,22 @@ const MembersFilter = ({
           border-radius: 5px;
           box-shadow: 0px 1px 2px 0px #0f172a29;
         }
-        :global(.search__input) {
+        :global(.header__search__input) {
           border: none;
           outline: none;
           width: 320px;
         }
-        .search__closeIcon--hidden {
+        .header__search__closeIcon--hidden {
           display: none;
         }
-        .search__closeIcon--visible {
+        .header__search__closeIcon--visible {
           display: block;
         }
-        .sort__text {
+        .header__sort__view {
           gap: 7px;
           align-items: center;
         }
-        .sort__order {
+        .sort__view__order {
           width: 160px;
           height: 40px;
           padding: 8px 12px;
@@ -221,11 +220,11 @@ const MembersFilter = ({
           background-color: white;
           cursor: pointer;
         }
-        .sort__order__by {
+        .view__order__type {
           width: 20px;
           height: 20px;
         }
-        .sort__order p {
+        sort__view__order p {
           font-size: 14px;
         }
         .sort__view {
@@ -262,10 +261,10 @@ const MembersFilter = ({
         .h-80 {
           height: 90px;
         }
-        .sort__order--hidden {
+        .sort__view__order--hidden {
           display: none;
         }
-        .sort__order--visible {
+        .sort__view__order--visible {
           display: flex;
           position: absolute;
           top: 50px;

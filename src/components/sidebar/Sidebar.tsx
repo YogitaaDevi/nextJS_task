@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import TextField from "../textfield/TextField";
 import RegionCard from "../card/RegionCard";
@@ -7,34 +7,65 @@ import { FilterType } from "@/types/filterType";
 import { INITIAL_VISIBLE_COUNT } from "@/constants/constants";
 import { RoleType } from "@/types/roleType";
 import RoleCard from "../card/RoleCard";
+import { fetchRoles } from "@/service/apiService";
 
 interface SidebarProps {
   data: FilterType;
-  roles?: RoleType[];
+  // roles?: RoleType[];
 }
 
-const Sidebar = ({ data, roles }: SidebarProps) => {
+const Sidebar = ({ data }: SidebarProps) => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const currentParams = new URLSearchParams(searchParams.toString());
-  const [count, setCount] = useState<number>(INITIAL_VISIBLE_COUNT);
-  const [isVisible, setIsVisible] = useState<boolean>(false);
+  const [count, setCount] = useState<number>(0);
+  const [isCountriesVisible, setIsCountriesVisible] = useState<boolean>(false);
+  const [search, setSearch] = useState<string>("");
+  const [isSkillsVisible, setIsSkillsVisible] = useState<boolean>(false);
+  const [roles, setRoles] = useState<RoleType[]>([]);
+  const getRoles = async (value?: string) => {
+    let response;
+    if (value?.length) response = await fetchRoles(value);
+    else response = await fetchRoles();
+    setRoles(response);
+  };
 
+  useEffect(() => {
+    if (search.length > 0) {
+      getRoles(search);
+    } else {
+      getRoles();
+    }
+  }, [search]);
+console.log(roles)
   const handleFilterChange = (filter: string, event?: any) => {
     const isChecked = event.target.checked;
-    if (isChecked) currentParams.set(filter, "true");
-    else currentParams.delete(filter);
+    if (isChecked) {
+      setCount((prev) => prev + 1);
+      currentParams.set(filter, "true");
+    } else {
+      setCount((prev) => prev - 1);
+      currentParams.delete(filter);
+    }
     router.push(`?${currentParams.toString()}`);
   };
 
   const handleClearFilters = () => {
     router.push(`?`);
+    setCount(0);
   };
 
   return (
     <div className="sidebar">
       <div className="flex items-center justify-around sidebar__header">
-        <h3 className="sidebar__header__text">Filters</h3>
+        <div className="flex items-center gap-10">
+          <h3 className="sidebar__header__text">Filters</h3>
+          {count > 0 && (
+            <div className="header__count flex justify-center items-center">
+              {count}
+            </div>
+          )}
+        </div>
         <div
           className="sidebar__header__text--clearFilter"
           onClick={handleClearFilters}
@@ -99,20 +130,29 @@ const Sidebar = ({ data, roles }: SidebarProps) => {
             <img src="/icons/search-gray.svg" alt="" className="search_icon" />
             <TextField
               type="text"
+              value={search}
               className="search_input"
               placeholder="Search Role [eg. Engineer]"
+              onChange={(e: any) => setSearch(e.target.value)}
             />
           </div>
+          {search.length > 0 && (
+            <div className="flex flex-col gap-5 height-50">
+              {roles.map((role, index: number) => (
+                <RoleCard key={index} role={role} setCount={setCount} />
+              ))}
+            </div>
+          )}
           <div className="flex flex-col gap-5">
-            {roles?.map((role, index: number) => (
-              <RoleCard key={index} role={role} />
+            {roles.map((role, index: number) => (
+              <RoleCard key={index} role={role} setCount={setCount} />
             ))}
           </div>
         </div>
         <div className="sidebar__filter__bycountries flex flex-col">
           <div className="region-text">Country</div>
           <div className="region-names flex flex-wrap">
-            {isVisible
+            {isCountriesVisible
               ? data.countries.map((item: string, index: number) => (
                   <RegionCard item={item} key={index} />
                 ))
@@ -123,9 +163,9 @@ const Sidebar = ({ data, roles }: SidebarProps) => {
                   ))}
             <div
               className="region-hidden flex items-center"
-              onClick={() => setIsVisible((prev) => !prev)}
+              onClick={() => setIsCountriesVisible((prev) => !prev)}
             >
-              {isVisible ? (
+              {isCountriesVisible ? (
                 <>
                   Show less <img src="/icons/filter-dropdown.svg" alt="" />
                   <div className="region-count flex justify-center items-center">
@@ -146,9 +186,35 @@ const Sidebar = ({ data, roles }: SidebarProps) => {
         <div className="sidebar__filter__bycountries flex flex-col">
           <div className="region-text">Skills</div>
           <div className="region-names flex flex-wrap">
-            {data.skills.slice(0, count).map((item: string, index: number) => (
-              <RegionCard item={item} key={index} />
-            ))}
+            {isSkillsVisible
+              ? data.skills.map((item: string, index: number) => (
+                  <RegionCard item={item} key={index} />
+                ))
+              : data.skills
+                  .slice(0, INITIAL_VISIBLE_COUNT)
+                  .map((item: string, index: number) => (
+                    <RegionCard item={item} key={index} />
+                  ))}
+            <div
+              className="region-hidden flex items-center"
+              onClick={() => setIsSkillsVisible((prev) => !prev)}
+            >
+              {isSkillsVisible ? (
+                <>
+                  Show less <img src="/icons/filter-dropdown.svg" alt="" />
+                  <div className="region-count flex justify-center items-center">
+                    {0}
+                  </div>
+                </>
+              ) : (
+                <>
+                  Show more <img src="/icons/filter-dropdown.svg" alt="" />
+                  <div className="region-count flex justify-center items-center">
+                    {data.skills.length - INITIAL_VISIBLE_COUNT}
+                  </div>
+                </>
+              )}
+            </div>
           </div>
         </div>
       </div>
@@ -160,6 +226,9 @@ const Sidebar = ({ data, roles }: SidebarProps) => {
           height: calc(100vh - 80px);
           position: fixed;
           z-index: 3;
+        }
+        .gap-10 {
+          gap: 8px;
         }
         .sidebar__header {
           height: 60px;
@@ -174,6 +243,18 @@ const Sidebar = ({ data, roles }: SidebarProps) => {
           font-size: 14px;
           color: rgb(21, 111, 248);
           cursor: pointer;
+        }
+        .height-50 {
+          height: 180px;
+          overflow-y: auto;
+        }
+        .header__count {
+          height: 20px;
+          width: 20px;
+          background-color: rgb(21, 111, 247);
+          color: white;
+          border-radius: 10px;
+          font-size: 14px;
         }
         .sidebar__filter {
           padding: 20px 30px;

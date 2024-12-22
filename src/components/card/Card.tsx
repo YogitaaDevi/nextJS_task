@@ -12,17 +12,17 @@ const Card = ({ member }: CardProps) => {
   const count = member.skills.length > 2 ? member.skills.length - 2 : 0;
 
   return (
-    <div className="card__container">
-      <div className="card__container__profile">
-        <img src="/icons/profile.jpg" alt="" className="profile-img" />
+    <div className="card">
+      <div className="card__profile">
+        <img src="/icons/profile.jpg" alt="" className="card__profile__img" />
       </div>
-      <div className="card__container__details">
-        <div className="member__details flex flex-col items-center">
+      <div className="card__member">
+        <div className="card__member__details flex flex-col items-center">
           <p>{member.name}</p>
           <p>Place</p>
           <p>Job</p>
         </div>
-        <div className="member__skills">
+        <div className="card__member__skills">
           {visibleSkills.map((skill: SkillType, index: number) => (
             <SkillCard item={skill} key={index} />
           ))}
@@ -31,7 +31,7 @@ const Card = ({ member }: CardProps) => {
       </div>
 
       <style jsx>{`
-        .card__container {
+        .card {
           background-color: white;
           height: 280px;
           border-radius: 12px;
@@ -40,7 +40,7 @@ const Card = ({ member }: CardProps) => {
           box-shadow: 0px 0px 4px rgb(224, 224, 224);
         }
 
-        .card__container__profile {
+        .card__profile {
           width: 100%;
           height: 90px;
           border-bottom: 0.5px solid rgb(203, 213, 225);
@@ -48,7 +48,7 @@ const Card = ({ member }: CardProps) => {
           padding: 0 85px;
         }
 
-        .profile-img {
+        .card__profile__img {
           width: 105px;
           height: 105px;
           border-radius: 50%;
@@ -56,18 +56,18 @@ const Card = ({ member }: CardProps) => {
           outline: 1px solid rgb(203, 213, 225);
         }
 
-        .card__container__details {
+        .card__member {
           padding: 20px 15px 0;
         }
 
-        .member__details {
+        .card__member__details {
           height: 115px;
           width: 100%;
           border-bottom: 0.5px solid rgb(203, 213, 225);
           gap: 8px;
         }
 
-        .member__skills {
+        .card__member__skills {
           margin-top: 12px;
         }
       `}</style>
