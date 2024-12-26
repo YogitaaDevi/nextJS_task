@@ -11,32 +11,38 @@ interface MembersFilterProps {
 const MembersFilter = ({ count }: MembersFilterProps) => {
   const [isOrder, setIsOrder] = useState<boolean>(false);
   const [searchBy, setSearchBy] = useState<string>("");
+  const [order, setOrder] = useState<string>("Ascending");
   const router = useRouter();
   const searchParams = useSearchParams();
   const currentParams = new URLSearchParams(searchParams.toString());
   const viewType = searchParams.get("viewType");
-  const sortType = searchParams.get("sortBy");
-
-  const handleSearch = (event: React.KeyboardEvent<HTMLInputElement>) => {
-    if (event.key === "Enter" && searchBy) {
-      currentParams.set("searchBy", searchBy);
-      router.push(`?searchBy=${encodeURIComponent(searchBy)}`);
-    }
-  };
 
   const handleClearSearch = () => {
-    setSearchBy("");
+    setSearchBy((prev) => prev = "" );
     currentParams.delete("searchBy");
     router.push("?");
+  };
+
+  const handleSearch = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === "Enter" && searchBy.length > 0) {
+      currentParams.set("searchBy", searchBy);
+      router.push(`?searchBy=${encodeURIComponent(searchBy)}`);
+    } else if (event.key === "Enter") {
+      handleClearSearch();
+    }
   };
 
   const handleCardView = (value: string) => {
     currentParams.set("viewType", value);
     router.push(`?viewType=${value}`);
   };
-  const handleSort = (order: string) => {
-    currentParams.set("sortBy", order);
-    router.push(`?sortBy=${order}`);
+  const handleSort = (direction: string) => {
+    const sortField = "Name";
+    const sortValue = `${sortField},${direction}`;
+    currentParams.set("sort", sortValue);
+    if (direction === "desc") setOrder("Descending");
+    else setOrder("Ascending");
+    router.push(`?${currentParams.toString()}`);
   };
 
   return (
@@ -79,13 +85,17 @@ const MembersFilter = ({ count }: MembersFilterProps) => {
                 className="relative"
                 onClick={() => setIsOrder((prev) => !prev)}
               >
-                <div className="sort__view__order flex items-center justify-between">
+                <div className="sort__view__order flex items-center justify-between font-14">
                   <img
-                    src="/icons/ascending-gray.svg"
-                    alt="Sort Ascending"
+                    src={
+                      order === "Descending"
+                        ? "/icons/descending-black.svg"
+                        : "/icons/ascending-gray.svg"
+                    }
+                    alt="Sort order"
                     className="view__order__type"
                   />
-                  <p>{viewType}</p>
+                  <p>{order}</p>
                   <img
                     src="/icons/dropdown-gray.svg"
                     alt="Sort Dropdown"
@@ -100,14 +110,18 @@ const MembersFilter = ({ count }: MembersFilterProps) => {
                   >
                     <div
                       className={
-                        sortType === "Ascending"
-                          ? "flex color__active h-40 items-center gap-5"
-                          : "flex h-40 items-center gap-5"
+                        order === "Descending"
+                          ? "flex h-40 items-center gap-5 font-14"
+                          : "flex color__active h-40 items-center gap-5 font-14"
                       }
-                      onClick={() => handleSort("Ascending")}
+                      onClick={() => handleSort("asc")}
                     >
                       <img
-                        src="/icons/ascending-gray.svg"
+                        src={
+                          order === "Descending"
+                            ? "/icons/ascending-gray.svg"
+                            : "/icons/ascending-selected.svg"
+                        }
                         alt="Sort Ascending"
                         className="view__order__type"
                       />
@@ -115,14 +129,18 @@ const MembersFilter = ({ count }: MembersFilterProps) => {
                     </div>
                     <div
                       className={
-                        sortType === "Descending"
-                          ? "flex color__active h-40 items-center gap-5"
-                          : "flex h-40 items-center gap-5"
+                        order === "Descending"
+                          ? "flex color__active h-40 items-center gap-5 font-14"
+                          : "flex h-40 items-center gap-5 font-14"
                       }
-                      onClick={() => handleSort("Descending")}
+                      onClick={() => handleSort("desc")}
                     >
                       <img
-                        src="/icons/descending-black.svg"
+                        src={
+                          order === "Descending"
+                            ? "/icons/descending-selected.svg"
+                            : "/icons/descending-black.svg"
+                        }
                         alt="Sort Descending"
                         className="view__order__type"
                       />
@@ -174,11 +192,14 @@ const MembersFilter = ({ count }: MembersFilterProps) => {
         .gap-7 {
           gap: 7px;
         }
-        .gap-55 {
+        .gap-5 {
           gap: 5px;
         }
         .gap-20 {
           gap: 20px;
+        }
+        .font-14 {
+          font-size: 14px;
         }
         .memberside__header__text {
           font-size: 30px;

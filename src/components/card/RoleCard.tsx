@@ -15,15 +15,26 @@ const RoleCard = ({ role, setCount }: RoleCardProps) => {
 
   const handleFilterByRole = (filter: string, event?: any) => {
     const isChecked = event.target.checked;
+    const currentRoles = searchParams.get("memberRoles")?.split("|") || [];
     if (isChecked) {
+      if (!currentRoles.includes(filter)) {
+        currentRoles.push(filter);
+      }
       setCount((prev: number) => prev + 1);
-      currentParams.set("memberRoles", filter);
     } else {
+      const updatedRoles = currentRoles.filter((role) => role !== filter);
+      currentRoles.length = 0;
+      currentRoles.push(...updatedRoles);
       setCount((prev: number) => prev - 1);
+    }
+    if (currentRoles.length > 0) {
+      currentParams.set("memberRoles", currentRoles.join("|"));
+    } else {
       currentParams.delete("memberRoles");
     }
     router.push(`?${currentParams.toString()}`);
   };
+
   return (
     <div className="card__roleBased flex items-center">
       <TextField
@@ -41,7 +52,7 @@ const RoleCard = ({ role, setCount }: RoleCardProps) => {
       )}
       <div className="card__roleBased__count">{role.count}</div>
       <style jsx>{`
-        .card__roleBased {
+        :global(.card__roleBased) {
           gap: 10px;
         }
         :global(.card__roleBased__check) {

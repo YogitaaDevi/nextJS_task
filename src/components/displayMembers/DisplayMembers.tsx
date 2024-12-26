@@ -8,7 +8,7 @@ import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { fetchMembers } from "@/service/apiService";
 import { MemberResponseType } from "@/types/memberResponseType";
-import { memberFilterType } from "@/types/memberFilterType";
+import { MemberFilterType } from "@/types/memberFilterType";
 import ListCard from "../card/ListCard";
 import MembersFilter from "../membersFilter/MembersFilter";
 
@@ -17,20 +17,26 @@ const DisplayMembers = () => {
   const [hasMore, setHasMore] = useState<boolean>(true);
   const [loading, setLoading] = useState<boolean>(false);
   const [count, setCount] = useState<number>(0);
-  const [cardView, setCardView] = useState<string>("Grid");
   const searchParams = useSearchParams();
   const { observerRef, page, setPage } = useInfinityScroll(hasMore, loading);
   const viewType = searchParams.get("viewType");
+  
+  const filterChange = (): MemberFilterType => {
+    const sortByValue = searchParams.get("sort") || "";
+    const [sortField, sortValue] = sortByValue.split(",");
+    return {
+      officeHoursOnly: searchParams.get("officeHoursOnly") === "true",
+      openToWork: searchParams.get("openToWork") === "true",
+      includeFriends: searchParams.get("includeFriends") === "true",
+      isRecent: searchParams.get("isRecent") === "true",
+      searchBy: searchParams.get("searchBy") || "",
+      sortField: sortField || "name",
+      sortBy: sortValue || "asc",
+      memberRoles: searchParams.get("memberRoles")?.split("|") || [],
+      skills: searchParams.get("skills")?.split("|") || [],
 
-  const filterChange = (): memberFilterType => ({
-    officeHours: searchParams.get("OfficeHours") === "true",
-    openToCollaborate: searchParams.get("Collaborate") === "true",
-    friends: searchParams.get("Friends") === "true",
-    newMembers: searchParams.get("NewMembers") === "true",
-    searchMembers: searchParams.get("searchBy") || "",
-    sortMembers: searchParams.get("sortBy") || "",
-    memberRoles: searchParams.get("memberRole") || "",
-  });
+    };
+  };
 
   const getMembers = async (pageNo: number) => {
     if (loading) return;
@@ -41,7 +47,7 @@ const DisplayMembers = () => {
         pageNo,
         appliedFilters
       );
-
+      console.log(appliedFilters.sortBy);
       if (response.members) {
         setCurrentMembers((prev) => [...prev, ...response.members]);
         setCount(response.count);
@@ -54,7 +60,6 @@ const DisplayMembers = () => {
       setLoading(false);
     }
   };
-
   useEffect(() => {
     setCurrentMembers([]);
     setHasMore(true);

@@ -1,75 +1,59 @@
 import { BASE_URL, PAGE_LIMIT } from "@/constants/constants";
 import { FilterType } from "@/types/filterType";
-import { memberFilterType } from "@/types/memberFilterType";
+import { MemberFilterType } from "@/types/memberFilterType";
 import { MemberResponseType } from "@/types/memberResponseType";
-import { MemberType } from "@/types/memberType";
 import { RoleType } from "@/types/roleType";
 
 export const fetchMembers = async (
   pageNumber: number,
-  appliedFilters: memberFilterType
+  appliedFilters: MemberFilterType = {}
 ): Promise<MemberResponseType> => {
   try {
-    const response = await fetch(
-      `${BASE_URL}?pagination=true&page=${pageNumber}&limit=${PAGE_LIMIT}&select=uid,name,location,skills,officeHours,openToWork,plnFriend,isFeatured`
-    );
-
+    const stringifyQueryValues = (values: string[]) => {
+      console.log(values);
+      if (values && Array.isArray(values)) return values.join(",");
+      return [];
+    };
+    console.log(appliedFilters.memberRoles);
+    const filterQuery = {
+      ...(appliedFilters.officeHoursOnly ? { officeHours__not: "null" } : {}),
+      ...(appliedFilters.includeFriends
+        ? { isVerified: "all" }
+        : { plnFriend: false, isVerified: "true" }),
+      ...(appliedFilters.openToWork ? { openToWork: true } : {}),
+      ...(appliedFilters.isRecent ? { isRecent: true } : {}),
+      ...(appliedFilters.memberRoles?.length
+        ? { memberRoles: stringifyQueryValues(appliedFilters.memberRoles) }
+        : {}),
+      ...(appliedFilters.searchBy
+        ? { name__icontains: appliedFilters.searchBy.trim() }
+        : {}),
+      ...(appliedFilters.skills?.length
+        ? { "skills.title__with": stringifyQueryValues(appliedFilters.skills) }
+        : {}),
+      orderBy: `${
+        appliedFilters.sortBy === "desc" ? "-" : ""
+      }${appliedFilters.sortField?.toLowerCase()}`,
+    };
+    console.log(filterQuery.orderBy);
+    const queryString = Object.entries(filterQuery)
+      .map(
+        ([key, value]) =>
+          `${encodeURIComponent(key)}=${encodeURIComponent(value as string)}`
+      )
+      .join("&");
+    console.log(queryString);
+    const url = `${BASE_URL}?pagination=true&page=${pageNumber}&limit=${PAGE_LIMIT}&select=uid,name,location,skills,officeHours,openToWork,plnFriend,isFeatured,memberRoles${
+      queryString.length && `&${queryString}`
+    }`;
+    const response = await fetch(url);
+    const data = await response.json();
+    console.log(data);
     if (!response.ok) {
       throw new Error("Failed to fetch members");
     }
 
-    const data = await response.json();
-    const {
-      officeHours,
-      openToCollaborate,
-      friends,
-      newMembers,
-      searchMembers,
-      sortMembers,
-    } = appliedFilters;
-
-    if (
-      !officeHours &&
-      !openToCollaborate &&
-      !friends &&
-      !newMembers &&
-      !searchMembers
-    ) {
-      return {
-        count: data.count,
-        members: sortMembers
-          ? data.members.sort((a: MemberType, b: MemberType) =>
-              sortMembers === "Descending"
-                ? b.name.localeCompare(a.name)
-                : a.name.localeCompare(b.name)
-            )
-          : data.members.sort((a: MemberType, b: MemberType) =>
-              a.name.localeCompare(b.name)
-            ),
-      };
-    }
-
-    const filteredData = data.members.filter((user: MemberType) => {
-      const matchesFilter =
-        (officeHours && Boolean(user.officeHours)) ||
-        (openToCollaborate && user.openToWork) ||
-        (friends && user.plnFriend) ||
-        (newMembers && user.isFeatured) ||
-        (searchMembers &&
-          user.name.toLowerCase().includes(searchMembers.toLowerCase()));
-      return matchesFilter;
-    });
-
-    const sortedData = filteredData.sort((a: MemberType, b: MemberType) =>
-      sortMembers === "Descending"
-        ? b.name.localeCompare(a.name)
-        : a.name.localeCompare(b.name)
-    );
-
-    return {
-      count: sortedData.length,
-      members: sortedData,
-    };
+    return data;
   } catch (error) {
     console.error("Error in fetching the members:", error);
     throw error;

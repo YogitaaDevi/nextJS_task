@@ -1,5 +1,6 @@
 import React from "react";
 import Button from "../button/Button";
+import { useRouter, useSearchParams } from "next/navigation";
 
 interface RegionCardProps {
   item: string;
@@ -8,7 +9,10 @@ interface RegionCardProps {
 const RegionCard = ({ item }: RegionCardProps) => {
   return (
     <div className="filter flex">
-      <Button className="filter__name" name={item} />
+      <Button
+        className="filter__name"
+        name={item}
+      />
       <style jsx>{`
         .filter {
           gap: 20px;

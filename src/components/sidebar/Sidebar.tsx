@@ -2,27 +2,27 @@
 import React, { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import TextField from "../textfield/TextField";
-import RegionCard from "../card/RegionCard";
 import { FilterType } from "@/types/filterType";
-import { INITIAL_VISIBLE_COUNT } from "@/constants/constants";
 import { RoleType } from "@/types/roleType";
-import RoleCard from "../card/RoleCard";
 import { fetchRoles } from "@/service/apiService";
+import Skills from "./skills/Skills";
+import MetroAreas from "./metro-areas/MetroAreas";
+import Regions from "./regions/Regions";
+import Roles from "./roles/Roles";
+import Countries from "./countries/Countries";
 
 interface SidebarProps {
   data: FilterType;
-  // roles?: RoleType[];
 }
 
 const Sidebar = ({ data }: SidebarProps) => {
+  const [count, setCount] = useState<number>(0);
+  const [search, setSearch] = useState<string>("");
+  const [roles, setRoles] = useState<RoleType[]>([]);
   const router = useRouter();
   const searchParams = useSearchParams();
   const currentParams = new URLSearchParams(searchParams.toString());
-  const [count, setCount] = useState<number>(0);
-  const [isCountriesVisible, setIsCountriesVisible] = useState<boolean>(false);
-  const [search, setSearch] = useState<string>("");
-  const [isSkillsVisible, setIsSkillsVisible] = useState<boolean>(false);
-  const [roles, setRoles] = useState<RoleType[]>([]);
+
   const getRoles = async (value?: string) => {
     let response;
     if (value?.length) response = await fetchRoles(value);
@@ -37,7 +37,7 @@ const Sidebar = ({ data }: SidebarProps) => {
       getRoles();
     }
   }, [search]);
-console.log(roles)
+  
   const handleFilterChange = (filter: string, event?: any) => {
     const isChecked = event.target.checked;
     if (isChecked) {
@@ -80,8 +80,8 @@ console.log(roles)
             <label className="switch">
               <TextField
                 type="checkbox"
-                onChange={() => handleFilterChange("OfficeHours", event)}
-                checked={searchParams.get("OfficeHours") === "true"}
+                onChange={() => handleFilterChange("officeHoursOnly", event)}
+                checked={searchParams.get("officeHoursOnly") === "true"}
               />
             </label>
           </div>
@@ -90,8 +90,8 @@ console.log(roles)
             <label className="switch">
               <TextField
                 type="checkbox"
-                onChange={() => handleFilterChange("Collaborate", event)}
-                checked={searchParams.get("Collaborate") === "true"}
+                onChange={() => handleFilterChange("openToWork", event)}
+                checked={searchParams.get("openToWork") === "true"}
               />
             </label>
           </div>
@@ -100,8 +100,8 @@ console.log(roles)
             <label className="switch">
               <TextField
                 type="checkbox"
-                onChange={() => handleFilterChange("Friends", event)}
-                checked={searchParams.get("Friends") === "true"}
+                onChange={() => handleFilterChange("includeFriends", event)}
+                checked={searchParams.get("includeFriends") === "true"}
               />
             </label>
           </div>
@@ -110,115 +110,23 @@ console.log(roles)
             <label className="switch">
               <TextField
                 type="checkbox"
-                onChange={() => handleFilterChange("NewMembers", event)}
-                checked={searchParams.get("NewMembers") === "true"}
+                onChange={() => handleFilterChange("isRecent", event)}
+                checked={searchParams.get("isRecent") === "true"}
               />
             </label>
           </div>
         </div>
-        <div className="sidebar__filter__byregion flex flex-col">
-          <div className="region-text">Region</div>
-          <div className="region-names flex flex-wrap">
-            {data.regions.map((item: string, index: number) => (
-              <RegionCard item={item} key={index} />
-            ))}
-          </div>
-        </div>
-        <div className="sidebar__filter__bycountries flex flex-col">
-          <div className="region-text">Roles</div>
-          <div className="filter__bysearch flex items-center">
-            <img src="/icons/search-gray.svg" alt="" className="search_icon" />
-            <TextField
-              type="text"
-              value={search}
-              className="search_input"
-              placeholder="Search Role [eg. Engineer]"
-              onChange={(e: any) => setSearch(e.target.value)}
-            />
-          </div>
-          {search.length > 0 && (
-            <div className="flex flex-col gap-5 height-50">
-              {roles.map((role, index: number) => (
-                <RoleCard key={index} role={role} setCount={setCount} />
-              ))}
-            </div>
-          )}
-          <div className="flex flex-col gap-5">
-            {roles.map((role, index: number) => (
-              <RoleCard key={index} role={role} setCount={setCount} />
-            ))}
-          </div>
-        </div>
-        <div className="sidebar__filter__bycountries flex flex-col">
-          <div className="region-text">Country</div>
-          <div className="region-names flex flex-wrap">
-            {isCountriesVisible
-              ? data.countries.map((item: string, index: number) => (
-                  <RegionCard item={item} key={index} />
-                ))
-              : data.countries
-                  .slice(0, INITIAL_VISIBLE_COUNT)
-                  .map((item: string, index: number) => (
-                    <RegionCard item={item} key={index} />
-                  ))}
-            <div
-              className="region-hidden flex items-center"
-              onClick={() => setIsCountriesVisible((prev) => !prev)}
-            >
-              {isCountriesVisible ? (
-                <>
-                  Show less <img src="/icons/filter-dropdown.svg" alt="" />
-                  <div className="region-count flex justify-center items-center">
-                    {0}
-                  </div>
-                </>
-              ) : (
-                <>
-                  Show more <img src="/icons/filter-dropdown.svg" alt="" />
-                  <div className="region-count flex justify-center items-center">
-                    {data.countries.length - INITIAL_VISIBLE_COUNT}
-                  </div>
-                </>
-              )}
-            </div>
-          </div>
-        </div>
-        <div className="sidebar__filter__bycountries flex flex-col">
-          <div className="region-text">Skills</div>
-          <div className="region-names flex flex-wrap">
-            {isSkillsVisible
-              ? data.skills.map((item: string, index: number) => (
-                  <RegionCard item={item} key={index} />
-                ))
-              : data.skills
-                  .slice(0, INITIAL_VISIBLE_COUNT)
-                  .map((item: string, index: number) => (
-                    <RegionCard item={item} key={index} />
-                  ))}
-            <div
-              className="region-hidden flex items-center"
-              onClick={() => setIsSkillsVisible((prev) => !prev)}
-            >
-              {isSkillsVisible ? (
-                <>
-                  Show less <img src="/icons/filter-dropdown.svg" alt="" />
-                  <div className="region-count flex justify-center items-center">
-                    {0}
-                  </div>
-                </>
-              ) : (
-                <>
-                  Show more <img src="/icons/filter-dropdown.svg" alt="" />
-                  <div className="region-count flex justify-center items-center">
-                    {data.skills.length - INITIAL_VISIBLE_COUNT}
-                  </div>
-                </>
-              )}
-            </div>
-          </div>
-        </div>
+        <Regions data={data} />
+        <Roles
+          roles={roles}
+          setCount={setCount}
+          search={search}
+          setSearch={setSearch}
+        />
+        <Countries data={data} />
+        <Skills data={data} setCount={setCount} />
+        <MetroAreas data={data} />
       </div>
-
       <style jsx>{`
         .sidebar {
           background-color: #ffffff;

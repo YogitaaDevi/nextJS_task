@@ -1,0 +1,1 @@
+const BASE_URL = `${process.env.DIRECTORY_API_URL}/v1/members`
