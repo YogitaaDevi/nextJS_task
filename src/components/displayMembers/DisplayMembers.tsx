@@ -6,7 +6,7 @@ import Loader from "../loader/Loader";
 import useInfinityScroll from "@/hooks/useInfinityScroll";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
-import { fetchMembers } from "@/service/apiService";
+import { fetchMembers } from "@/service/member.service";
 import { MemberResponseType } from "@/types/memberResponseType";
 import { MemberFilterType } from "@/types/memberFilterType";
 import ListCard from "../card/ListCard";

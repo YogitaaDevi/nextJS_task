@@ -3,7 +3,7 @@ import Header from "@/components/header/Header";
 import Sidebar from "@/components/sidebar/Sidebar";
 import "./style.css";
 import DisplayMembers from "@/components/displayMembers/DisplayMembers";
-import { fetchFilters, fetchMembers, fetchRoles } from "@/service/apiService";
+import { fetchFilters, fetchMembers, fetchRoles } from "@/service/member.service";
 
 const page = async () => {
   const data = await fetchFilters();

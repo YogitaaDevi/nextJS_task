@@ -4,7 +4,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import TextField from "../textfield/TextField";
 import { FilterType } from "@/types/filterType";
 import { RoleType } from "@/types/roleType";
-import { fetchRoles } from "@/service/apiService";
+import { fetchRoles } from "@/service/member.service";
 import Skills from "./skills/Skills";
 import MetroAreas from "./metro-areas/MetroAreas";
 import Regions from "./regions/Regions";
