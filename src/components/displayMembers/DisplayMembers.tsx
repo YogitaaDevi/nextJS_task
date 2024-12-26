@@ -11,6 +11,7 @@ import { MemberResponseType } from "@/types/memberResponseType";
 import { MemberFilterType } from "@/types/memberFilterType";
 import ListCard from "../card/ListCard";
 import MembersFilter from "../membersFilter/MembersFilter";
+import NotFound from "../notFound/NotFound";
 
 const DisplayMembers = () => {
   const [currentMembers, setCurrentMembers] = useState<MemberType[]>([]);
@@ -20,7 +21,7 @@ const DisplayMembers = () => {
   const searchParams = useSearchParams();
   const { observerRef, page, setPage } = useInfinityScroll(hasMore, loading);
   const viewType = searchParams.get("viewType");
-  
+
   const filterChange = (): MemberFilterType => {
     const sortByValue = searchParams.get("sort") || "";
     const [sortField, sortValue] = sortByValue.split(",");
@@ -34,7 +35,6 @@ const DisplayMembers = () => {
       sortBy: sortValue || "asc",
       memberRoles: searchParams.get("memberRoles")?.split("|") || [],
       skills: searchParams.get("skills")?.split("|") || [],
-
     };
   };
 
@@ -47,10 +47,13 @@ const DisplayMembers = () => {
         pageNo,
         appliedFilters
       );
-      console.log(appliedFilters.sortBy);
-      if (response.members) {
+
+      if (response.members.length > 0) {
         setCurrentMembers((prev) => [...prev, ...response.members]);
         setCount(response.count);
+        if (currentMembers.length + response.members.length >= response.count) {
+          setHasMore(false);
+        }
       } else {
         setHasMore(false);
       }
@@ -60,12 +63,13 @@ const DisplayMembers = () => {
       setLoading(false);
     }
   };
+
   useEffect(() => {
     setCurrentMembers([]);
+    setCount(0);
     setHasMore(true);
-    setLoading(false);
     setPage(1);
-  }, [searchParams, setPage]);
+  }, [searchParams]);
 
   useEffect(() => {
     if (hasMore) getMembers(page);
@@ -88,9 +92,15 @@ const DisplayMembers = () => {
             ))}
           </div>
         )}
-        <div ref={observerRef} className="display__loader">
-          {hasMore && <Loader />}
-        </div>
+        {!hasMore && currentMembers.length === 0 ? (
+          <div className="display__loader">
+            <NotFound />
+          </div>
+        ) : (
+          <div ref={observerRef} className="display__loader">
+            {hasMore && <Loader />}
+          </div>
+        )}
       </div>
       <style jsx>{`
         .display__members {
@@ -115,6 +125,7 @@ const DisplayMembers = () => {
           display: flex;
           align-items: center;
           justify-content: center;
+          margin-top: 20px;
         }
       `}</style>
     </>

@@ -1,8 +1,8 @@
 import RoleCard from "@/components/card/RoleCard";
 import TextField from "@/components/textfield/TextField";
 import { RoleType } from "@/types/roleType";
-import { useSearchParams } from "next/navigation";
-import React, { useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import React, { useEffect, useState } from "react";
 
 interface RolesProps {
   roles: RoleType[];
@@ -12,7 +12,46 @@ interface RolesProps {
 }
 
 const Roles = ({ roles, setCount, search, setSearch }: RolesProps) => {
+  const router = useRouter();
   const searchParams = useSearchParams();
+  const currentParams = new URLSearchParams(searchParams.toString());
+  const [selectedRoles, setSelectedRoles] = useState<string[]>([]);
+  const [selectAll, setSelectAll] = useState(false);
+  useEffect(() => {
+    const currentRoles = searchParams.get("memberRoles")?.split("|") || [];
+    setSelectedRoles(currentRoles);
+    setSelectAll(currentRoles.length === roles.length);
+  }, [searchParams, roles]);
+
+  const handleSelectAll = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const isChecked = event.target.checked;
+    if (isChecked) {
+      const allRoles = roles.map((role) => role.role);
+      currentParams.set("memberRoles", allRoles.join("|"));
+      setSelectedRoles(allRoles);
+    } else {
+      currentParams.delete("memberRoles");
+      setSelectedRoles([]);
+    }
+    router.push(`?${currentParams.toString()}`);
+    setSelectAll(isChecked);
+  };
+
+  const handleRoleSelect = (role: string, isChecked: boolean) => {
+    const updatedRoles = isChecked
+      ? [...selectedRoles, role]
+      : selectedRoles.filter((r) => r !== role);
+
+    setSelectedRoles(updatedRoles);
+    setSelectAll(updatedRoles.length === roles.length);
+
+    if (updatedRoles.length > 0) {
+      currentParams.set("memberRoles", updatedRoles.join("|"));
+    } else {
+      currentParams.delete("memberRoles");
+    }
+    router.push(`?${currentParams.toString()}`);
+  };
 
   return (
     <div className="sidebar__filter__bycountries flex flex-col">
@@ -33,18 +72,31 @@ const Roles = ({ roles, setCount, search, setSearch }: RolesProps) => {
             <TextField
               type="checkbox"
               className="card__roleBased__check"
-              checked={searchParams.get("memberRoles") === "true"}
+              checked={selectAll}
+              onChange={handleSelectAll}
             />
             <span className="card__roleBased__name">Select All</span>
           </div>
           {roles.map((role, index: number) => (
-            <RoleCard key={index} role={role} setCount={setCount} />
+            <RoleCard
+              key={index}
+              role={role}
+              setCount={setCount}
+              isSelected={selectedRoles.includes(role.role)}
+              onRoleSelect={handleRoleSelect}
+            />
           ))}
         </div>
       )}
       <div className="flex flex-col gap-5">
         {roles.map((role, index: number) => (
-          <RoleCard key={index} role={role} setCount={setCount} />
+          <RoleCard
+            key={index}
+            role={role}
+            setCount={setCount}
+            isSelected={selectedRoles.includes(role.role)}
+            onRoleSelect={handleRoleSelect}
+          />
         ))}
       </div>
       <style jsx>{`

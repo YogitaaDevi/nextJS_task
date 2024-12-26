@@ -192,10 +192,6 @@ const Sidebar = ({ data }: SidebarProps) => {
           color: rgb(71, 85, 105);
           margin-bottom: 16px;
         }
-        .region-text {
-          font-size: 14px;
-          font-weight: 600;
-        }
         ::-webkit-scrollbar {
           width: 6px;
           height: 5px;
@@ -227,22 +223,6 @@ const Sidebar = ({ data }: SidebarProps) => {
         .gap-5 {
           gap: 8px;
           margin-bottom: 20px;
-        }
-        .region-hidden {
-          font-size: 12px;
-          font-weight: 600;
-          gap: 5px;
-          margin-top: 10px;
-          cursor: pointer;
-          margin-bottom: 20px;
-        }
-        .region-count {
-          height: 25px;
-          width: 32px;
-          border-radius: 10px;
-          font-weight: 500;
-          border: 1px solid #f1f5f9;
-          background-color: #f1f5f9;
         }
       `}</style>
     </div>

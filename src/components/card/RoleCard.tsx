@@ -6,6 +6,8 @@ import { useRouter, useSearchParams } from "next/navigation";
 interface RoleCardProps {
   role: RoleType;
   setCount: (e: any) => void;
+  isSelected: boolean;
+  onRoleSelect: (role: string, isChecked: boolean) => void;
 }
 
 const RoleCard = ({ role, setCount }: RoleCardProps) => {
@@ -41,7 +43,10 @@ const RoleCard = ({ role, setCount }: RoleCardProps) => {
         type="checkbox"
         className="card__roleBased__check"
         onChange={() => handleFilterByRole(role.role, event)}
-        checked={searchParams.get("memberRoles") === "true"}
+        checked={searchParams
+          .get("memberRoles")
+          ?.split("|")
+          .includes(role.role)}
       />
       {role.alias ? (
         <>
