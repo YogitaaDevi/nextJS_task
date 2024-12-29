@@ -1,24 +1,24 @@
 "use client";
 
 import { MemberType } from "@/types/memberType";
-import Card from "../card/Card";
-import Loader from "../loader/Loader";
+import MemberGridView from "../card/MemberGridView";
+import Loader from "../../ui/loader/Loader";
 import useInfinityScroll from "@/hooks/useInfinityScroll";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { fetchMembers } from "@/service/member.service";
 import { MemberResponseType } from "@/types/memberResponseType";
 import { MemberFilterType } from "@/types/memberFilterType";
-import ListCard from "../card/ListCard";
-import MembersFilter from "../membersFilter/MembersFilter";
-import NotFound from "../notFound/NotFound";
+import MembersFilter from "../members-filter/MembersFilter";
+import NotFound from "../not-found/NotFound";
+import MemberListView from "../card/MemberListView";
 
-interface DisplayMembersProps {
+interface MembersPageProps {
   data: MemberResponseType;
   appliedFilters: MemberFilterType;
 }
 
-const DisplayMembers = ({ data, appliedFilters }: DisplayMembersProps) => {
+const MembersPage = ({ data, appliedFilters }: MembersPageProps) => {
   const [currentMembers, setCurrentMembers] = useState<MemberType[]>(
     data.members
   );
@@ -71,13 +71,13 @@ const DisplayMembers = ({ data, appliedFilters }: DisplayMembersProps) => {
         {viewType === "List" ? (
           <div className="display__members__list">
             {currentMembers.map((user: MemberType) => (
-              <ListCard key={user.uid} member={user} />
+              <MemberListView key={user.uid} member={user} />
             ))}
           </div>
         ) : (
           <div className="display__members__grid">
             {currentMembers.map((user: MemberType) => (
-              <Card key={user.uid} member={user} />
+              <MemberGridView key={user.uid} member={user} />
             ))}
           </div>
         )}
@@ -121,4 +121,4 @@ const DisplayMembers = ({ data, appliedFilters }: DisplayMembersProps) => {
   );
 };
 
-export default DisplayMembers;
+export default MembersPage;

@@ -1,13 +1,13 @@
 import { MemberType } from "@/types/memberType";
 import { SkillType } from "@/types/skillType";
 import React from "react";
-import SkillCard from "./SkillCard";
+import MemberSkills from "./MemberSkills";
 
 interface ListCardProps {
   member: MemberType;
 }
 
-const ListCard = ({ member }: ListCardProps) => {
+const MemberListView = ({ member }: ListCardProps) => {
   const visibleSkills = member.skills.slice(0, 2);
   const count = member.skills.length > 2 ? member.skills.length - 2 : 0;
 
@@ -29,9 +29,9 @@ const ListCard = ({ member }: ListCardProps) => {
       </div>
       <div className="card__member__skills">
         {visibleSkills.map((skill: SkillType, index: number) => (
-          <SkillCard item={skill} key={index} />
+          <MemberSkills item={skill} key={index} />
         ))}
-        {count !== 0 && <SkillCard count={count} />}
+        {count !== 0 && <MemberSkills count={count} />}
       </div>
 
       <style jsx>{`
@@ -67,4 +67,4 @@ const ListCard = ({ member }: ListCardProps) => {
   );
 };
 
-export default ListCard;
+export default MemberListView;

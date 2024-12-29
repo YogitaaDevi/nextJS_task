@@ -1,4 +1,4 @@
-import RegionCard from "@/components/card/RegionCard";
+import RegionCard from "@/components/page/card/RegionCard";
 import { FilterType } from "@/types/filterType";
 import { LocationType } from "@/types/locationType";
 import React from "react";
@@ -13,9 +13,9 @@ const Regions = ({ data, location }: RegionsProps) => {
     (region: LocationType) => region?.continent
   );
   return (
-    <div className="sidebar__filter__byregion flex flex-col">
-      <div className="region-text">Region</div>
-      <div className="region-names flex flex-wrap">
+    <div className="region-filter flex flex-col">
+      <div className="region-filter__heading">Region</div>
+      <div className="region-filter__regions">
         {data.regions.map((item: string, index: number) => (
           <RegionCard
             item={item}
@@ -29,15 +29,21 @@ const Regions = ({ data, location }: RegionsProps) => {
         ))}
       </div>
       <style jsx>{`
-        .sidebar__filter__byregion {
+        .region-filter {
           height: 140px;
           width: 100%;
           gap: 16px;
           border-bottom: 0.5px solid rgb(203, 213, 225);
+          display: flex;
+          flex-direction: column;
         }
-        .region-text {
+        .region-filter__heading {
           font-size: 14px;
           font-weight: 600;
+        }
+        .region-filter__regions {
+          display: flex;
+          flex-wrap: wrap;
         }
       `}</style>
     </div>

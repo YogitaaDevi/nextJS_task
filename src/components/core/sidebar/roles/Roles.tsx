@@ -1,5 +1,5 @@
-import RoleCard from "@/components/card/RoleCard";
-import TextField from "@/components/textfield/TextField";
+import RoleCard from "@/components/page/card/RoleCard";
+import TextField from "@/components/ui/textfield/TextField";
 import { RoleType } from "@/types/roleType";
 import { useSearchParams } from "next/navigation";
 import React, { useState } from "react";
@@ -18,24 +18,28 @@ const Roles = ({ roles, setCount, getRoles }: RolesProps) => {
   };
 
   return (
-    <div className="sidebar__filter__bycountries flex flex-col">
-      <div className="region-text">Roles</div>
-      <div className="filter__bysearch flex items-center">
-        <img src="/icons/search-gray.svg" alt="" className="search_icon" />
+    <div className="role-filter">
+      <div className="role-filter__heading">Roles</div>
+      <div className="role-filter__search">
+        <img
+          src="/icons/search-gray.svg"
+          alt=""
+          className="role-filter__search__icon"
+        />
         <TextField
           type="text"
           value={search}
-          className="search_input"
+          className="role-filter__search__input"
           placeholder="Search Role [eg. Engineer]"
           onChange={(e: any) => handleSearch(e.target.value)}
         />
       </div>
       {search.length > 0 ? (
-        <div className="flex flex-col gap-5 height-50">
-          <div className="card__roleBased flex items-center">
+        <div className="role-filter__hidden">
+          <div className="role-filter__hidden__roles">
             <TextField
               type="checkbox"
-              className="card__roleBased__check"
+              className="role-filter__hidden__roles__checkbox"
               checked={searchParams.get("memberRoles") === "true"}
             />
             <span className="card__roleBased__name">Select All</span>
@@ -45,58 +49,64 @@ const Roles = ({ roles, setCount, getRoles }: RolesProps) => {
           ))}
         </div>
       ) : (
-        <div className="flex flex-col gap-5">
+        <div className="role-filter__roles">
           {roles.map((role, index: number) => (
             <RoleCard key={index} role={role} setCount={setCount} />
           ))}
         </div>
       )}
       <style jsx>{`
-        .sidebar__filter__bycountries {
+        .role-filter {
           position: relative;
           width: 100%;
           gap: 16px;
           border-bottom: 0.5px solid rgb(203, 213, 225);
+          display: flex;
+          flex-direction: column;
         }
-        .region-text {
+        .role-filter__heading {
           font-size: 14px;
           font-weight: 600;
         }
-        .filter__bysearch {
+        .role-filter__search {
           width: 100%;
           border: 1px solid #e5e7eb;
           height: 40px;
           border-radius: 10px;
           padding: 0 15px;
           gap: 10px;
+          display: flex;
+          align-items: center;
         }
-        :global(.search_input) {
+        :global(.role-filter__search__input) {
           border: none;
           outline: none;
         }
-        .search_icon {
+        .role-filter__search__icon {
           width: 17px;
           height: 17px;
         }
-        .gap-5 {
+        .role-filter__hidden,
+        .role-filter__roles {
           gap: 8px;
           margin-bottom: 20px;
+          display: flex;
+          flex-direction: column;
         }
-        .region-hidden {
-          font-size: 12px;
-          font-weight: 600;
-          gap: 5px;
-          margin-top: 10px;
-          cursor: pointer;
-          margin-bottom: 20px;
+        .role-filter__hidden__roles {
+          display: flex;
+          align-items: center;
         }
-        .region-count {
-          height: 25px;
-          width: 32px;
-          border-radius: 10px;
-          font-weight: 500;
-          border: 1px solid #f1f5f9;
-          background-color: #f1f5f9;
+        :global(.role-filter__hidden__roles__checkbox) {
+          appearance: none;
+          height: 20px;
+          width: 20px;
+          border: 1px solid #e5e7eb;
+          border-radius: 5px;
+        }
+        :global(.role-filter__hidden__roles__checkbox:checked) {
+          border: 1px solid #156ff7;
+          background-color: #156ff7;
         }
       `}</style>
     </div>

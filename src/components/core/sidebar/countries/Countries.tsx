@@ -1,4 +1,4 @@
-import RegionCard from "@/components/card/RegionCard";
+import RegionCard from "@/components/page/card/RegionCard";
 import { INITIAL_VISIBLE_COUNT } from "@/constants/constants";
 import { FilterType } from "@/types/filterType";
 import { LocationType } from "@/types/locationType";
@@ -17,9 +17,9 @@ const Countries = ({ data, location }: CountriesProps) => {
   );
   return (
     <>
-      <div className="sidebar__filter__bycountries flex flex-col">
-        <div className="region-text">Country</div>
-        <div className="region-names flex flex-wrap">
+      <div className="country-filter">
+        <div className="country-filter__heading">Country</div>
+        <div className="country-filter__countries">
           {isCountriesVisible
             ? data.countries.map((item: string, index: number) => (
                 <RegionCard
@@ -47,50 +47,59 @@ const Countries = ({ data, location }: CountriesProps) => {
                 ))}
         </div>
         <div
-          className="region-hidden flex items-center"
+          className="country-filter__hidden"
           onClick={() => setIsCountriesVisible((prev) => !prev)}
         >
           {isCountriesVisible ? (
             <>
               Show less <img src="/icons/filter-dropdown.svg" alt="" />
-              <div className="region-count flex justify-center items-center">
-                {0}
-              </div>
+              <div className="country-filter__hidden__country-count">{0}</div>
             </>
           ) : (
             <>
               Show more <img src="/icons/filter-dropdown.svg" alt="" />
-              <div className="region-count flex justify-center items-center">
+              <div className="country-filter__hidden__country-count">
                 {data.countries.length - INITIAL_VISIBLE_COUNT}
               </div>
             </>
           )}
         </div>
         <style jsx>{`
-          .sidebar__filter__bycountries {
+          .country-filter {
             position: relative;
             width: 100%;
             gap: 16px;
             border-bottom: 0.5px solid rgb(203, 213, 225);
+            display: flex;
+            flex-direction: column;
           }
-          .region-text {
+          .country-filter__heading {
             font-size: 14px;
             font-weight: 600;
           }
-          .region-hidden {
+          .country-filter__countries {
+            display: flex;
+            flex-wrap: wrap;
+          }
+          .country-filter__hidden {
             font-size: 12px;
             font-weight: 600;
             gap: 5px;
             cursor: pointer;
             margin-bottom: 20px;
+            display: flex;
+            align-items: center;
           }
-          .region-count {
+          .country-filter__hidden__country-count {
             height: 25px;
             width: 32px;
             border-radius: 10px;
             font-weight: 500;
             border: 1px solid #f1f5f9;
             background-color: #f1f5f9;
+            display: flex;
+            align-items: center;
+            justify-content: center;
           }
         `}</style>
       </div>

@@ -1,13 +1,13 @@
 import React, { useState } from "react";
-import Button from "../button/Button";
+import Button from "../../ui/button/Button";
 import { useRouter, useSearchParams } from "next/navigation";
 
-interface SkillCardSidebarProps {
+interface MemberSkillsProps {
   item: string;
   setCount: (e: any) => void;
 }
 
-const SkillCardSidebar = ({ item, setCount }: SkillCardSidebarProps) => {
+const SkillCard = ({ item, setCount }: MemberSkillsProps) => {
   const [isSelected, setIsSelected] = useState<boolean>(false);
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -73,4 +73,4 @@ const SkillCardSidebar = ({ item, setCount }: SkillCardSidebarProps) => {
   );
 };
 
-export default SkillCardSidebar;
+export default SkillCard;

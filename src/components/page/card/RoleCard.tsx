@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import TextField from "../textfield/TextField";
+import TextField from "../../ui/textfield/TextField";
 import { RoleType } from "@/types/roleType";
 import { useRouter, useSearchParams } from "next/navigation";
 
@@ -40,7 +40,7 @@ const RoleCard = ({ role, setCount }: RoleCardProps) => {
     <div className="card__roleBased flex items-center">
       <TextField
         type="checkbox"
-        className="card__roleBased__check"
+        className="role-filter__hidden__roles__checkbox"
         onChange={() => handleFilterByRole(role.role, event)}
         checked={searchParams
           .get("memberRoles")
@@ -58,17 +58,6 @@ const RoleCard = ({ role, setCount }: RoleCardProps) => {
       <style jsx>{`
         :global(.card__roleBased) {
           gap: 10px;
-        }
-        :global(.card__roleBased__check) {
-          appearance: none;
-          height: 20px;
-          width: 20px;
-          border: 1px solid #e5e7eb;
-          border-radius: 5px;
-        }
-        :global(.card__roleBased__check:checked) {
-          border: 1px solid #156ff7;
-          background-color: #156ff7;
         }
         :global(.card__roleBased__name) {
           font-size: 12px;

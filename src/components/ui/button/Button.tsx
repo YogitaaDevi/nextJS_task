@@ -10,7 +10,7 @@ interface ButtonProps {
 }
 
 const Button = ({
-  className = "",
+  className,
   name,
   onClick,
   variant = "PRIMARY",
@@ -18,7 +18,7 @@ const Button = ({
 }: ButtonProps) => {
   return (
     <button
-      className={`rounded text-white ${size} ${className} ${variant}`}
+      className={className}
       onClick={onClick}
     >
       {name}

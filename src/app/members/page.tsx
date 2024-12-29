@@ -1,8 +1,7 @@
 import React from "react";
-import Header from "@/components/header/Header";
-import Sidebar from "@/components/sidebar/Sidebar";
+import Header from "@/components/core/header/Header";
+import Sidebar from "@/components/core/sidebar/Sidebar";
 import "./style.css";
-import DisplayMembers from "@/components/displayMembers/DisplayMembers";
 import {
   fetchFilters,
   fetchMembers,
@@ -13,6 +12,7 @@ import { RoleType } from "@/types/roleType";
 import { MemberFilterType } from "@/types/memberFilterType";
 import { MemberResponseType } from "@/types/memberResponseType";
 import { LocationType } from "@/types/locationType";
+import MembersPage from "@/components/page/members-page/MembersPage";
 
 const page = async ({ searchParams }: any) => {
   const filterChange = async (): Promise<MemberFilterType> => {
@@ -60,10 +60,10 @@ const page = async ({ searchParams }: any) => {
   return (
     <>
       <Header />
-      <div className="flex main__layout">
+      <div className="main__layout">
         <Sidebar data={filters} roleData={roleData} location={location} />
-        <div className="flex flex-col main__layout__membersSide">
-          <DisplayMembers data={members} appliedFilters={appliedFilters} />
+        <div className="main__layout__membersSide">
+          <MembersPage data={members} appliedFilters={appliedFilters} />
         </div>
       </div>
     </>

@@ -1,6 +1,5 @@
 import React from "react";
-import Button from "../button/Button";
-import { useRouter, useSearchParams } from "next/navigation";
+import Button from "../../ui/button/Button";
 
 interface RegionCardProps {
   item: string;

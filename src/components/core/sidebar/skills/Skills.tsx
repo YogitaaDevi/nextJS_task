@@ -1,54 +1,36 @@
-import RegionCard from "@/components/card/RegionCard";
 import { INITIAL_VISIBLE_COUNT } from "@/constants/constants";
 import { FilterType } from "@/types/filterType";
-import { LocationType } from "@/types/locationType";
 import React, { useState } from "react";
+import SkillCard from "@/components/page/card/SkillCard";
 
-interface MetroAreasProps {
+interface SkillsProps {
   data: FilterType;
-  location: LocationType[];
+  setCount: (e: any) => void;
 }
 
-const MetroAreas = ({ data, location }: MetroAreasProps) => {
-  const [isMetroAreaVisible, setIsMetroAreaVisible] = useState<boolean>(false);
-  const membersArea = location.map((region: LocationType) => region?.metroArea);
+const Skills = ({ data, setCount }: SkillsProps) => {
+  const [isSkillsVisible, setIsSkillsVisible] = useState<boolean>(false);
 
   return (
     <>
       <div className="sidebar__filter__bycountries flex flex-col">
-        <div className="region-text">Metro Area</div>
-        <div className="region-names flex flex-wrap">
-          {isMetroAreaVisible
-            ? data.countries.map((item: string, index: number) => (
-                <RegionCard
-                  item={item}
-                  key={index}
-                  className={
-                    membersArea.includes(item)
-                      ? "filter__name--highlighted"
-                      : "filter__name"
-                  }
-                />
+        <div className="region-text">Skills</div>
+        <div className="flex flex-wrap">
+          {isSkillsVisible
+            ? data.skills.map((item: string, index: number) => (
+                <SkillCard item={item} key={index} setCount={setCount} />
               ))
-            : data.metroAreas
+            : data.skills
                 .slice(0, INITIAL_VISIBLE_COUNT)
                 .map((item: string, index: number) => (
-                  <RegionCard
-                    item={item}
-                    key={index}
-                    className={
-                      membersArea.includes(item)
-                        ? "filter__name--highlighted"
-                        : "filter__name"
-                    }
-                  />
+                  <SkillCard item={item} key={index} setCount={setCount} />
                 ))}
         </div>
         <div
           className="region-hidden flex items-center"
-          onClick={() => setIsMetroAreaVisible((prev: boolean) => !prev)}
+          onClick={() => setIsSkillsVisible((prev: boolean) => !prev)}
         >
-          {isMetroAreaVisible ? (
+          {isSkillsVisible ? (
             <>
               Show less <img src="/icons/filter-dropdown.svg" alt="" />
               <div className="region-count flex justify-center items-center">
@@ -59,7 +41,7 @@ const MetroAreas = ({ data, location }: MetroAreasProps) => {
             <>
               Show more <img src="/icons/filter-dropdown.svg" alt="" />
               <div className="region-count flex justify-center items-center">
-                {data.metroAreas.length - INITIAL_VISIBLE_COUNT}
+                {data.skills.length - INITIAL_VISIBLE_COUNT}
               </div>
             </>
           )}
@@ -96,4 +78,4 @@ const MetroAreas = ({ data, location }: MetroAreasProps) => {
   );
 };
 
-export default MetroAreas;
+export default Skills;
