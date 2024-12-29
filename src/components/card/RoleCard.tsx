@@ -6,18 +6,17 @@ import { useRouter, useSearchParams } from "next/navigation";
 interface RoleCardProps {
   role: RoleType;
   setCount: (e: any) => void;
-  isSelected: boolean;
-  onRoleSelect: (role: string, isChecked: boolean) => void;
+  // isSelected: boolean;
 }
 
 const RoleCard = ({ role, setCount }: RoleCardProps) => {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const currentParams = new URLSearchParams(searchParams.toString());
 
   const handleFilterByRole = (filter: string, event?: any) => {
     const isChecked = event.target.checked;
-    const currentRoles = searchParams.get("memberRoles")?.split("|") || [];
+    const currentParams = new URLSearchParams(searchParams.toString());
+    const currentRoles = currentParams.get("memberRoles")?.split("|") || [];
     if (isChecked) {
       if (!currentRoles.includes(filter)) {
         currentRoles.push(filter);

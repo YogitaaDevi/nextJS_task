@@ -13,8 +13,15 @@ import ListCard from "../card/ListCard";
 import MembersFilter from "../membersFilter/MembersFilter";
 import NotFound from "../notFound/NotFound";
 
-const DisplayMembers = () => {
-  const [currentMembers, setCurrentMembers] = useState<MemberType[]>([]);
+interface DisplayMembersProps {
+  data: MemberResponseType;
+  appliedFilters: MemberFilterType;
+}
+
+const DisplayMembers = ({ data, appliedFilters }: DisplayMembersProps) => {
+  const [currentMembers, setCurrentMembers] = useState<MemberType[]>(
+    data.members
+  );
   const [hasMore, setHasMore] = useState<boolean>(true);
   const [loading, setLoading] = useState<boolean>(false);
   const [count, setCount] = useState<number>(0);
@@ -22,32 +29,14 @@ const DisplayMembers = () => {
   const { observerRef, page, setPage } = useInfinityScroll(hasMore, loading);
   const viewType = searchParams.get("viewType");
 
-  const filterChange = (): MemberFilterType => {
-    const sortByValue = searchParams.get("sort") || "";
-    const [sortField, sortValue] = sortByValue.split(",");
-    return {
-      officeHoursOnly: searchParams.get("officeHoursOnly") === "true",
-      openToWork: searchParams.get("openToWork") === "true",
-      includeFriends: searchParams.get("includeFriends") === "true",
-      isRecent: searchParams.get("isRecent") === "true",
-      searchBy: searchParams.get("searchBy") || "",
-      sortField: sortField || "name",
-      sortBy: sortValue || "asc",
-      memberRoles: searchParams.get("memberRoles")?.split("|") || [],
-      skills: searchParams.get("skills")?.split("|") || [],
-    };
-  };
-
   const getMembers = async (pageNo: number) => {
     if (loading) return;
     setLoading(true);
     try {
-      const appliedFilters = filterChange();
       const response: MemberResponseType = await fetchMembers(
-        pageNo,
-        appliedFilters
+        appliedFilters,
+        page
       );
-
       if (response.members.length > 0) {
         setCurrentMembers((prev) => [...prev, ...response.members]);
         setCount(response.count);

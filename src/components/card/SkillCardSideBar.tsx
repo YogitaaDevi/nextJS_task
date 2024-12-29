@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Button from "../button/Button";
 import { useRouter, useSearchParams } from "next/navigation";
 
@@ -8,10 +8,12 @@ interface SkillCardSidebarProps {
 }
 
 const SkillCardSidebar = ({ item, setCount }: SkillCardSidebarProps) => {
+  const [isSelected, setIsSelected] = useState<boolean>(false);
   const router = useRouter();
   const searchParams = useSearchParams();
   const currentParams = new URLSearchParams(searchParams.toString());
   const handleSelectFilter = (name: string) => {
+    setIsSelected((prev) => !prev);
     const currentSkills = searchParams.get("skills")?.split("|") || [];
     if (!currentSkills.includes(name)) {
       currentSkills.push(name);
@@ -27,13 +29,15 @@ const SkillCardSidebar = ({ item, setCount }: SkillCardSidebarProps) => {
     } else {
       currentParams.delete("skills");
     }
-    console.log(currentSkills, "------------------from rolecard");
     router.push(`?${currentParams.toString()}`);
   };
   return (
     <div className="filter flex">
+      {}
       <Button
-        className="filter__name__skill"
+        className={
+          isSelected ? "filter__name__skill--selected" : "filter__name__skill"
+        }
         name={item}
         onClick={() => handleSelectFilter(item)}
       />
@@ -50,6 +54,18 @@ const SkillCardSidebar = ({ item, setCount }: SkillCardSidebarProps) => {
           margin-right: 5px;
           margin-bottom: 8px;
           background-color: white;
+          cursor: pointer;
+        }
+        :global(.filter__name__skill--selected) {
+          height: 25px;
+          padding: 3px 10px;
+          border-radius: 50px;
+          font-size: 12px;
+          border: 1px solid rgb(29 78 216);
+          color: rgb(29 78 216);
+          margin-right: 5px;
+          margin-bottom: 8px;
+          background-color: rgb(219 234 254);
           cursor: pointer;
         }
       `}</style>

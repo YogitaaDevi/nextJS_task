@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import TextField from "../textfield/TextField";
 import { FilterType } from "@/types/filterType";
@@ -10,15 +10,17 @@ import MetroAreas from "./metro-areas/MetroAreas";
 import Regions from "./regions/Regions";
 import Roles from "./roles/Roles";
 import Countries from "./countries/Countries";
+import { LocationType } from "@/types/locationType";
 
 interface SidebarProps {
   data: FilterType;
+  roleData: RoleType[];
+  location: LocationType[]
 }
 
-const Sidebar = ({ data }: SidebarProps) => {
+const Sidebar = ({ data, roleData, location }: SidebarProps) => {
   const [count, setCount] = useState<number>(0);
-  const [search, setSearch] = useState<string>("");
-  const [roles, setRoles] = useState<RoleType[]>([]);
+  const [roles, setRoles] = useState<RoleType[]>(roleData);
   const router = useRouter();
   const searchParams = useSearchParams();
   const currentParams = new URLSearchParams(searchParams.toString());
@@ -30,16 +32,9 @@ const Sidebar = ({ data }: SidebarProps) => {
     setRoles(response);
   };
 
-  useEffect(() => {
-    if (search.length > 0) {
-      getRoles(search);
-    } else {
-      getRoles();
-    }
-  }, [search]);
-  
   const handleFilterChange = (filter: string, event?: any) => {
     const isChecked = event.target.checked;
+    console.log(filter)
     if (isChecked) {
       setCount((prev) => prev + 1);
       currentParams.set(filter, "true");
@@ -116,16 +111,11 @@ const Sidebar = ({ data }: SidebarProps) => {
             </label>
           </div>
         </div>
-        <Regions data={data} />
-        <Roles
-          roles={roles}
-          setCount={setCount}
-          search={search}
-          setSearch={setSearch}
-        />
-        <Countries data={data} />
+        <Regions data={data} location={location} />
+        <Roles roles={roles} setCount={setCount} getRoles={getRoles} />
+        <Countries data={data} location={location} />
         <Skills data={data} setCount={setCount} />
-        <MetroAreas data={data} />
+        <MetroAreas data={data} location={location} />
       </div>
       <style jsx>{`
         .sidebar {

@@ -1,15 +1,20 @@
 import RegionCard from "@/components/card/RegionCard";
 import { INITIAL_VISIBLE_COUNT } from "@/constants/constants";
 import { FilterType } from "@/types/filterType";
+import { LocationType } from "@/types/locationType";
 import React, { useState } from "react";
 
 interface CountriesProps {
   data: FilterType;
+  location: LocationType[];
 }
 
-const Countries = ({ data }: CountriesProps) => {
+const Countries = ({ data, location }: CountriesProps) => {
   const [isCountriesVisible, setIsCountriesVisible] = useState<boolean>(false);
 
+  const membersCountry = location.map(
+    (region: LocationType) => region?.country
+  );
   return (
     <>
       <div className="sidebar__filter__bycountries flex flex-col">
@@ -17,12 +22,28 @@ const Countries = ({ data }: CountriesProps) => {
         <div className="region-names flex flex-wrap">
           {isCountriesVisible
             ? data.countries.map((item: string, index: number) => (
-                <RegionCard item={item} key={index} />
+                <RegionCard
+                  item={item}
+                  key={index}
+                  className={
+                    membersCountry.includes(item)
+                      ? "filter__name--highlighted"
+                      : "filter__name"
+                  }
+                />
               ))
             : data.countries
                 .slice(0, INITIAL_VISIBLE_COUNT)
                 .map((item: string, index: number) => (
-                  <RegionCard item={item} key={index} />
+                  <RegionCard
+                    item={item}
+                    key={index}
+                    className={
+                      membersCountry.includes(item)
+                        ? "filter__name--highlighted"
+                        : "filter__name"
+                    }
+                  />
                 ))}
         </div>
         <div

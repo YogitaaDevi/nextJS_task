@@ -1,14 +1,17 @@
 import RegionCard from "@/components/card/RegionCard";
 import { INITIAL_VISIBLE_COUNT } from "@/constants/constants";
 import { FilterType } from "@/types/filterType";
+import { LocationType } from "@/types/locationType";
 import React, { useState } from "react";
 
 interface MetroAreasProps {
   data: FilterType;
+  location: LocationType[];
 }
 
-const MetroAreas = ({ data }: MetroAreasProps) => {
+const MetroAreas = ({ data, location }: MetroAreasProps) => {
   const [isMetroAreaVisible, setIsMetroAreaVisible] = useState<boolean>(false);
+  const membersArea = location.map((region: LocationType) => region?.metroArea);
 
   return (
     <>
@@ -17,12 +20,28 @@ const MetroAreas = ({ data }: MetroAreasProps) => {
         <div className="region-names flex flex-wrap">
           {isMetroAreaVisible
             ? data.countries.map((item: string, index: number) => (
-                <RegionCard item={item} key={index} />
+                <RegionCard
+                  item={item}
+                  key={index}
+                  className={
+                    membersArea.includes(item)
+                      ? "filter__name--highlighted"
+                      : "filter__name"
+                  }
+                />
               ))
             : data.metroAreas
                 .slice(0, INITIAL_VISIBLE_COUNT)
                 .map((item: string, index: number) => (
-                  <RegionCard item={item} key={index} />
+                  <RegionCard
+                    item={item}
+                    key={index}
+                    className={
+                      membersArea.includes(item)
+                        ? "filter__name--highlighted"
+                        : "filter__name"
+                    }
+                  />
                 ))}
         </div>
         <div

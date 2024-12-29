@@ -3,12 +3,13 @@ import { FilterType } from "@/types/filterType";
 import { MemberFilterType } from "@/types/memberFilterType";
 import { MemberResponseType } from "@/types/memberResponseType";
 import { RoleType } from "@/types/roleType";
+import { useSearchParams } from "next/navigation";
 
 const BASE_URL = `${process.env.NEXT_PUBLIC_DIRECTORY_API_URL}/v1/members`;
 
 export const fetchMembers = async (
-  pageNumber: number,
-  appliedFilters: MemberFilterType = {}
+  appliedFilters: MemberFilterType = {},
+  pageNumber: number = 1
 ): Promise<MemberResponseType> => {
   try {
     const stringifyQueryValues = (values: string[]) => {

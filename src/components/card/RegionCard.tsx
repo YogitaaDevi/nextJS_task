@@ -4,20 +4,30 @@ import { useRouter, useSearchParams } from "next/navigation";
 
 interface RegionCardProps {
   item: string;
+  className: string;
 }
 
-const RegionCard = ({ item }: RegionCardProps) => {
+const RegionCard = ({ item, className}: RegionCardProps) => {
   return (
     <div className="filter flex">
-      <Button
-        className="filter__name"
-        name={item}
-      />
+      <Button className={className} name={item} />
       <style jsx>{`
         .filter {
           gap: 20px;
         }
         :global(.filter__name) {
+          height: 25px;
+          padding: 3px 10px;
+          border-radius: 50px;
+          font-size: 12px;
+          border: 1px solid rgb(203, 213, 225);
+          margin-right: 5px;
+          margin-bottom: 8px;
+          background-color: white;
+          color: rgb(108, 123, 145);
+          cursor: pointer;
+        }
+        :global(.filter__name--highlighted) {
           height: 25px;
           padding: 3px 10px;
           border-radius: 50px;
