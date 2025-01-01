@@ -3,6 +3,7 @@ import TextField from "@/components/ui/textfield/TextField";
 import { RoleType } from "@/types/roleType";
 import { useRouter, useSearchParams } from "next/navigation";
 import React, { useState } from "react";
+
 interface RolesProps {
   roles: RoleType[];
   setCount: (e: any) => void;
@@ -15,12 +16,16 @@ const Roles = ({ roles, setCount, getRoles }: RolesProps) => {
   const [search, setSearch] = useState<string>("");
 
   const handleSearch = (value: string) => {
-    getRoles(value);
     setSearch(value);
+    getRoles(value);
   };
 
+  const filteredRoles = roles.filter((role) =>
+    role.role.toLowerCase().includes(search.toLowerCase())
+  );
+
   const handleSelectAll = () => {
-    const currentRoles = roles.map((role) => role.role); 
+    const currentRoles = filteredRoles.map((role) => role.role);
     currentParams.set("memberRoles", currentRoles.join("|"));
     router.push(`?${currentParams.toString()}`);
   };
@@ -44,20 +49,25 @@ const Roles = ({ roles, setCount, getRoles }: RolesProps) => {
       </div>
       {search.length > 0 ? (
         <div className="role-filter__hidden">
-          <div className="role-filter__hidden__roles">
-            <TextField
-              type="checkbox"
-              className="role-filter__hidden__roles__checkbox"
-              checked={searchParams.get("memberRoles") === "true"}
-              onChange={handleSelectAll}
-            />
-            <span className="role-filter__hidden__roles__heading">
-              Select All
-            </span>
-          </div>
-          {roles.map((role, index: number) => (
-            <RoleCard key={index} role={role} setCount={setCount} />
-          ))}
+          {filteredRoles.length > 0 ? (
+            <>
+              <div className="role-filter__hidden__roles">
+                <TextField
+                  type="checkbox"
+                  className="role-filter__hidden__roles__checkbox"
+                  onChange={handleSelectAll}
+                />
+                <span className="role-filter__hidden__roles__heading">
+                  Select All
+                </span>
+              </div>
+              {filteredRoles.map((role, index: number) => (
+                <RoleCard key={index} role={role} setCount={setCount} />
+              ))}
+            </>
+          ) : (
+            <div className="role-filter__no-results">No roles found</div>
+          )}
         </div>
       ) : (
         <div className="role-filter__roles">
@@ -108,6 +118,18 @@ const Roles = ({ roles, setCount, getRoles }: RolesProps) => {
           height: 150px;
           overflow-y: scroll;
         }
+        ::-webkit-scrollbar {
+          width: 6px;
+          height: 5px;
+        }
+        ::-webkit-scrollbar-track {
+          box-shadow: inset 0 0 1px rgb(203, 213, 225);
+          border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb {
+          background: rgb(203, 213, 225);
+          border-radius: 10px;
+        }
         .role-filter__hidden__roles {
           display: flex;
           align-items: center;
@@ -129,8 +151,14 @@ const Roles = ({ roles, setCount, getRoles }: RolesProps) => {
           font-weight: 500;
           line-height: 14px;
         }
+        .role-filter__no-results {
+          font-size: 14px;
+          color: #6b7280;
+          text-align: center;
+        }
       `}</style>
     </div>
   );
 };
+
 export default Roles;
