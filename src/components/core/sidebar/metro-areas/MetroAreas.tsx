@@ -11,6 +11,7 @@ interface MetroAreasProps {
 
 const MetroAreas = ({ data, location }: MetroAreasProps) => {
   const [isMetroAreaVisible, setIsMetroAreaVisible] = useState<boolean>(false);
+
   const membersArea = location.map((region: LocationType) => region?.metroArea);
 
   return (

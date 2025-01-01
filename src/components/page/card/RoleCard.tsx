@@ -6,17 +6,19 @@ import { useRouter, useSearchParams } from "next/navigation";
 interface RoleCardProps {
   role: RoleType;
   setCount: (e: any) => void;
-  // isSelected: boolean;
 }
 
 const RoleCard = ({ role, setCount }: RoleCardProps) => {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const currentParams = new URLSearchParams(searchParams.toString());
+  const currentRoles = currentParams.get("memberRoles")?.split("|") || [];
 
-  const handleFilterByRole = (filter: string, event?: any) => {
+  const handleFilterByRole = (
+    filter: string,
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
     const isChecked = event.target.checked;
-    const currentParams = new URLSearchParams(searchParams.toString());
-    const currentRoles = currentParams.get("memberRoles")?.split("|") || [];
     if (isChecked) {
       if (!currentRoles.includes(filter)) {
         currentRoles.push(filter);
@@ -35,13 +37,15 @@ const RoleCard = ({ role, setCount }: RoleCardProps) => {
     }
     router.push(`?${currentParams.toString()}`);
   };
-
+console.log(searchParams.get("memberRoles")?.split('|'));
   return (
-    <div className="card__roleBased flex items-center">
+    <div className="card__roleBased">
       <TextField
         type="checkbox"
         className="role-filter__hidden__roles__checkbox"
-        onChange={() => handleFilterByRole(role.role, event)}
+        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+          handleFilterByRole(role.role, e)
+        }
         checked={searchParams
           .get("memberRoles")
           ?.split("|")
@@ -58,6 +62,8 @@ const RoleCard = ({ role, setCount }: RoleCardProps) => {
       <style jsx>{`
         :global(.card__roleBased) {
           gap: 10px;
+          display: flex;
+          align-items: center;
         }
         :global(.card__roleBased__name) {
           font-size: 12px;

@@ -6,71 +6,91 @@ import SkillCard from "@/components/page/card/SkillCard";
 interface SkillsProps {
   data: FilterType;
   setCount: (e: any) => void;
+  count: number;
 }
 
-const Skills = ({ data, setCount }: SkillsProps) => {
+const Skills = ({ data, setCount, count }: SkillsProps) => {
   const [isSkillsVisible, setIsSkillsVisible] = useState<boolean>(false);
 
   return (
     <>
-      <div className="sidebar__filter__bycountries flex flex-col">
-        <div className="region-text">Skills</div>
-        <div className="flex flex-wrap">
+      <div className="skill-filter">
+        <div className="skill-filter__heading">Skills</div>
+        <div className="skill-filter__skills">
           {isSkillsVisible
             ? data.skills.map((item: string, index: number) => (
-                <SkillCard item={item} key={index} setCount={setCount} />
+                <SkillCard
+                  item={item}
+                  key={index}
+                  setCount={setCount}
+                  count={count}
+                />
               ))
             : data.skills
                 .slice(0, INITIAL_VISIBLE_COUNT)
                 .map((item: string, index: number) => (
-                  <SkillCard item={item} key={index} setCount={setCount} />
+                  <SkillCard
+                    item={item}
+                    key={index}
+                    setCount={setCount}
+                    count={count}
+                  />
                 ))}
         </div>
         <div
-          className="region-hidden flex items-center"
+          className="skill-filter__hidden"
           onClick={() => setIsSkillsVisible((prev: boolean) => !prev)}
         >
           {isSkillsVisible ? (
             <>
               Show less <img src="/icons/filter-dropdown.svg" alt="" />
-              <div className="region-count flex justify-center items-center">
-                {0}
-              </div>
+              <div className="skill-filter__hidden__skill-count">{0}</div>
             </>
           ) : (
             <>
               Show more <img src="/icons/filter-dropdown.svg" alt="" />
-              <div className="region-count flex justify-center items-center">
+              <div className="skill-filter__hidden__skill-count">
                 {data.skills.length - INITIAL_VISIBLE_COUNT}
               </div>
             </>
           )}
         </div>
         <style jsx>{`
-          .sidebar__filter__bycountries {
+          .skill-filter {
             position: relative;
             width: 100%;
             gap: 16px;
             border-bottom: 0.5px solid rgb(203, 213, 225);
+            display: flex;
+            flex-direction: column;
           }
-          .region-text {
+          .skill-filter__heading {
             font-size: 14px;
             font-weight: 600;
           }
-          .region-hidden {
+          .skill-filter__skills {
+            display: flex;
+            flex-wrap: wrap;
+          }
+          .skill-filter__hidden {
             font-size: 12px;
             font-weight: 600;
             gap: 5px;
             cursor: pointer;
             margin-bottom: 20px;
+            display: flex;
+            align-items: center;
           }
-          .region-count {
+          .skill-filter__hidden__skill-count {
             height: 25px;
             width: 32px;
             border-radius: 10px;
             font-weight: 500;
             border: 1px solid #f1f5f9;
             background-color: #f1f5f9;
+            display: flex;
+            align-items: center;
+            justify-content: center;
           }
         `}</style>
       </div>

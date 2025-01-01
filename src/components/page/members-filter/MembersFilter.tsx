@@ -18,7 +18,7 @@ const MembersFilter = ({ count }: MembersFilterProps) => {
   const viewType = searchParams.get("viewType");
 
   const handleClearSearch = () => {
-    setSearchBy((prev) => prev = "" );
+    setSearchBy((prev) => (prev = ""));
     currentParams.delete("searchBy");
     router.push("?");
   };
@@ -47,45 +47,45 @@ const MembersFilter = ({ count }: MembersFilterProps) => {
 
   return (
     <>
-      <div className="memberside">
-        <div className="flex gap-20 memberside__header">
-          <div className="flex items-baseline gap-7">
-            <h1 className="memberside__header__text">Members</h1>
-            <div className="memberside__header__count">({count})</div>
+      <div className="member-view">
+        <div className="member-view__header">
+          <div className=" member-view__header__left">
+            <h1 className="member-view__header__left__text">Members</h1>
+            <div className="member-view__header__left__count">({count})</div>
           </div>
-          <div className="memberside__header__search flex items-center">
+          <div className="member-view__header__middle">
             <TextField
               type="text"
               value={searchBy}
               placeholder="Search by Member Name, Team or Project"
-              className="header__search__input"
+              className="member-view__header__middle__search-input"
               onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                 setSearchBy(e.target.value)
               }
               onKeyDown={handleSearch}
             />
-            <div className="flex gap-55">
+            <div className="member-view__header__middle__search-closeIcon">
               <img
                 src="/icons/close-gray.svg"
                 alt="Close Icon"
                 className={
                   searchBy.length > 0
-                    ? "header__search__closeIcon--visible"
-                    : "header__search__closeIcon--hidden"
+                    ? "member-view__header__middle__search-closeIcon--visible"
+                    : "member-view__header__middle__search-closeIcon--hidden"
                 }
                 onClick={handleClearSearch}
               />
               <img src="/icons/search.svg" alt="Search Icon" />
             </div>
           </div>
-          <div className="flex gap-20 justify-between memberside__header__sort">
-            <div className="flex header__sort__view">
+          <div className="member-view__header__right">
+            <div className="flex member-view__header__right__text">
               Sort by:
               <div
-                className="relative"
+                className="member-view__header__right__sort"
                 onClick={() => setIsOrder((prev) => !prev)}
               >
-                <div className="sort__view__order flex items-center justify-between font-14">
+                <div className="header__right__sort__order">
                   <img
                     src={
                       order === "Descending"
@@ -93,26 +93,26 @@ const MembersFilter = ({ count }: MembersFilterProps) => {
                         : "/icons/ascending-gray.svg"
                     }
                     alt="Sort order"
-                    className="view__order__type"
+                    className="sort__order__type"
                   />
                   <p>{order}</p>
                   <img
                     src="/icons/dropdown-gray.svg"
                     alt="Sort Dropdown"
-                    className="view__order__type"
+                    className="sort__order__type"
                   />
                   <div
                     className={
                       isOrder
-                        ? "sort__view__order sort__view__order--visible h-80 flex flex-col"
-                        : "sort__view__order--hidden"
+                        ? "header__right__sort__order--visible"
+                        : "header__right__sort__order--hidden"
                     }
                   >
                     <div
                       className={
                         order === "Descending"
-                          ? "flex h-40 items-center gap-5 font-14"
-                          : "flex color__active h-40 items-center gap-5 font-14"
+                          ? "sort__order__visible--inactive"
+                          : "sort__order__visible--active"
                       }
                       onClick={() => handleSort("asc")}
                     >
@@ -123,15 +123,15 @@ const MembersFilter = ({ count }: MembersFilterProps) => {
                             : "/icons/ascending-selected.svg"
                         }
                         alt="Sort Ascending"
-                        className="view__order__type"
+                        className="sort__order__type"
                       />
                       <p>Ascending</p>
                     </div>
                     <div
                       className={
                         order === "Descending"
-                          ? "flex color__active h-40 items-center gap-5 font-14"
-                          : "flex h-40 items-center gap-5 font-14"
+                          ? "sort__order__visible--active"
+                          : "sort__order__visible--inactive"
                       }
                       onClick={() => handleSort("desc")}
                     >
@@ -142,7 +142,7 @@ const MembersFilter = ({ count }: MembersFilterProps) => {
                             : "/icons/descending-black.svg"
                         }
                         alt="Sort Descending"
-                        className="view__order__type"
+                        className="sort__order__type"
                       />
                       <p>Descending</p>
                     </div>
@@ -150,12 +150,12 @@ const MembersFilter = ({ count }: MembersFilterProps) => {
                 </div>
               </div>
             </div>
-            <div className="sort__view flex">
+            <div className="member-view__header__right__view-type">
               <div
                 className={
                   viewType === "List"
-                    ? "sort__view__grid flex items-center justify-center"
-                    : "sort__view__grid--active sort__view__grid flex items-center justify-center"
+                    ? "view-type__grid"
+                    : "view-type__grid--active"
                 }
               >
                 <img
@@ -167,8 +167,8 @@ const MembersFilter = ({ count }: MembersFilterProps) => {
               <div
                 className={
                   viewType === "List"
-                    ? "sort__view__list--active sort__view__list flex items-center justify-center"
-                    : "sort__view__list flex items-center justify-center"
+                    ? "view-type__list--active"
+                    : "view-type__list"
                 }
               >
                 <img
@@ -183,32 +183,33 @@ const MembersFilter = ({ count }: MembersFilterProps) => {
       </div>
 
       <style jsx>{`
-        .memberside {
+        .member-view {
           height: 90px;
           padding: 43px 40px 0px 40px;
           background-color: rgb(241, 245, 249);
           position: fixed;
         }
-        .gap-7 {
-          gap: 7px;
-        }
-        .gap-5 {
-          gap: 5px;
-        }
-        .gap-20 {
+        .member-view__header {
           gap: 20px;
+          display: flex;
         }
-        .font-14 {
-          font-size: 14px;
+        .member-view__header__left {
+          gap: 7px;
+          display: flex;
+          align-items: baseline;
         }
-        .memberside__header__text {
+        .member-view__header__right {
+          display: flex;
+          justify-content: space-between;
+        }
+        .member-view__header__left__text {
           font-size: 30px;
         }
-        .memberside__header__count {
+        .member-view__header__left__count {
           font-size: 14px;
           color: rgb(109, 120, 139);
         }
-        .memberside__header__search {
+        .member-view__header__middle {
           width: 340px;
           height: 40px;
           background-color: white;
@@ -216,23 +217,30 @@ const MembersFilter = ({ count }: MembersFilterProps) => {
           padding: 0 12px;
           border-radius: 5px;
           box-shadow: 0px 1px 2px 0px #0f172a29;
+          display: flex;
+          align-items: center;
         }
-        :global(.header__search__input) {
+        :global(.member-view__header__middle__search-input) {
           border: none;
           outline: none;
           width: 320px;
         }
-        .header__search__closeIcon--hidden {
+        .member-view__header__middle__search-closeIcon {
+          display: flex;
+        }
+        .member-view__header__middle__search-closeIcon--hidden {
           display: none;
         }
-        .header__search__closeIcon--visible {
+        .member-view__header__middle__search-closeIcon--visible {
           display: block;
         }
-        .header__sort__view {
+        .member-view__header__right__text {
           gap: 7px;
           align-items: center;
+          display: flex;
         }
-        .sort__view__order {
+        .header__right__sort__order,
+        .header__right__sort__order--visible {
           width: 160px;
           height: 40px;
           padding: 8px 12px;
@@ -240,69 +248,93 @@ const MembersFilter = ({ count }: MembersFilterProps) => {
           box-shadow: 0px 1px 2px 0px #0f172a29;
           background-color: white;
           cursor: pointer;
+          font-size: 14px;
+          align-items: center;
+          display: flex;
+          justify-content: space-between;
         }
-        .view__order__type {
+        .sort__order__type {
           width: 20px;
           height: 20px;
         }
-        sort__view__order p {
+        header__right__sort__order p {
           font-size: 14px;
         }
-        .sort__view {
+        .sort__order__visible--active,
+        .sort__order__visible--inactive {
+          align-items: center;
+          display: flex;
+          height: 40px;
+          padding: 5px;
+          gap: 5px;
+          font-size: 14px;
+        }
+        .sort__order__visible--inactive {
+          background-color: rgb(21, 111, 247);
+          color: white;
+          border-radius: 5px;
+        }
+        .member-view__header__right__view-type {
           width: 80px;
           height: 40px;
           background-color: white;
           border-radius: 10px;
           box-shadow: 0px 1px 2px 0px #0f172a29;
+          display: flex;
         }
-        .sort__view__grid {
+        .view-type__grid,
+        .view-type__grid--active {
           width: 50%;
           height: 100%;
+          align-items: center;
+          justify-content: center;
+          display: flex;
         }
-        .sort__view__grid:hover {
+        .view-type__grid:hover,
+        .view-type__grid--active:hover {
           border-radius: 10px 0 0 10px;
           border: 2px solid rgb(131, 175, 246);
         }
-        .sort__view__grid--active {
+        .view-type__grid--active {
           background-color: rgb(219, 234, 254);
           border-radius: 10px 0 0 10px;
         }
-        .sort__view__list {
+        .view-type__list,
+        .view-type__list--active {
           width: 50%;
+          align-items: center;
+          justify-content: center;
+          display: flex;
           height: 100%;
         }
-        .sort__view__list:hover {
+        .view-type__list:hover,
+        .view-type__list--active:hover {
           border-radius: 0 10px 10px 0;
           border: 2px solid rgb(131, 175, 246);
         }
-        .sort__view__list--active {
+        .view-type__list--active {
           background-color: rgb(219, 234, 254);
           border-radius: 0 10px 10px 0;
         }
-        .h-80 {
-          height: 90px;
-        }
-        .sort__view__order--hidden {
+        .header__right__sort__order--hidden {
           display: none;
         }
-        .sort__view__order--visible {
+        .header__right__sort__order--visible {
           display: flex;
+          flex-direction: column;
           position: absolute;
           top: 50px;
           left: 0;
           padding: 8px;
+          height: 90px;
         }
-        .relative {
+        .member-view__header__right__sort {
           position: relative;
         }
         .color__active {
           background-color: rgb(21, 111, 247);
           color: white;
           border-radius: 5px;
-        }
-        .h-40 {
-          height: 40px;
-          padding: 5px;
         }
       `}</style>
     </>

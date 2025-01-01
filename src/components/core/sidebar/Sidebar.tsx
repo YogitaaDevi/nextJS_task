@@ -15,7 +15,7 @@ import { LocationType } from "@/types/locationType";
 interface SidebarProps {
   data: FilterType;
   roleData: RoleType[];
-  location: LocationType[]
+  location: LocationType[];
 }
 
 const Sidebar = ({ data, roleData, location }: SidebarProps) => {
@@ -32,9 +32,12 @@ const Sidebar = ({ data, roleData, location }: SidebarProps) => {
     setRoles(response);
   };
 
-  const handleFilterChange = (filter: string, event?: any) => {
+  const handleFilterChange = (
+    filter: string,
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
     const isChecked = event.target.checked;
-    console.log(filter)
+    console.log(filter);
     if (isChecked) {
       setCount((prev) => prev + 1);
       currentParams.set(filter, "true");
@@ -52,11 +55,11 @@ const Sidebar = ({ data, roleData, location }: SidebarProps) => {
 
   return (
     <div className="sidebar">
-      <div className="flex items-center justify-around sidebar__header">
-        <div className="flex items-center gap-10">
-          <h3 className="sidebar__header__text">Filters</h3>
+      <div className="sidebar__header">
+        <div className="sidebar__header__text">
+          <h3 className="sidebar__header__text--filter">Filters</h3>
           {count > 0 && (
-            <div className="header__count flex justify-center items-center">
+            <div className="sidebar__header__text--filter__count">
               {count}
             </div>
           )}
@@ -68,44 +71,52 @@ const Sidebar = ({ data, roleData, location }: SidebarProps) => {
           Clear filters
         </div>
       </div>
-      <div className="sidebar__filter flex flex-col">
-        <div className="sidebar__filter__bymember flex flex-col">
-          <div className="filter__bymember__option flex items-center justify-between">
+      <div className="sidebar__body">
+        <div className="sidebar__body__filter">
+          <div className="sidebar__body__filter__option">
             Only Show Members with Office Hours
             <label className="switch">
               <TextField
                 type="checkbox"
-                onChange={() => handleFilterChange("officeHoursOnly", event)}
+                onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+                  handleFilterChange("officeHoursOnly", event)
+                }
                 checked={searchParams.get("officeHoursOnly") === "true"}
               />
             </label>
           </div>
-          <div className="filter__bymember__option flex items-center justify-between">
+          <div className="sidebar__body__filter__option">
             Open to Collaborate
             <label className="switch">
               <TextField
                 type="checkbox"
-                onChange={() => handleFilterChange("openToWork", event)}
+                onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+                  handleFilterChange("openToWork", event)
+                }
                 checked={searchParams.get("openToWork") === "true"}
               />
             </label>
           </div>
-          <div className="filter__bymember__option flex items-center justify-between">
+          <div className="sidebar__body__filter__option">
             Include Friends of Protocol Labs
             <label className="switch">
               <TextField
                 type="checkbox"
-                onChange={() => handleFilterChange("includeFriends", event)}
+                onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+                  handleFilterChange("includeFriends", event)
+                }
                 checked={searchParams.get("includeFriends") === "true"}
               />
             </label>
           </div>
-          <div className="filter__bymember__option flex items-center justify-between">
+          <div className="sidebar__body__filter__option">
             New Members
             <label className="switch">
               <TextField
                 type="checkbox"
-                onChange={() => handleFilterChange("isRecent", event)}
+                onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+                  handleFilterChange("isRecent", event)
+                }
                 checked={searchParams.get("isRecent") === "true"}
               />
             </label>
@@ -114,7 +125,7 @@ const Sidebar = ({ data, roleData, location }: SidebarProps) => {
         <Regions data={data} location={location} />
         <Roles roles={roles} setCount={setCount} getRoles={getRoles} />
         <Countries data={data} location={location} />
-        <Skills data={data} setCount={setCount} />
+        <Skills data={data} setCount={setCount} count={count} />
         <MetroAreas data={data} location={location} />
       </div>
       <style jsx>{`
@@ -125,16 +136,21 @@ const Sidebar = ({ data, roleData, location }: SidebarProps) => {
           position: fixed;
           z-index: 3;
         }
-        .gap-10 {
-          gap: 8px;
-        }
         .sidebar__header {
           height: 60px;
           border-bottom: 0.5px solid rgb(203, 213, 225);
           box-shadow: 0px 0px 4px rgb(224, 224, 224);
           gap: 10px;
+          display: flex;
+          align-items: center;
+          justify-content: space-around;
         }
         .sidebar__header__text {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+        }
+        .sidebar__header__text--filter {
           font-weight: 550;
         }
         .sidebar__header__text--clearFilter {
@@ -142,28 +158,31 @@ const Sidebar = ({ data, roleData, location }: SidebarProps) => {
           color: rgb(21, 111, 248);
           cursor: pointer;
         }
-        .height-50 {
-          height: 180px;
-          overflow-y: auto;
-        }
-        .header__count {
+        .sidebar__header__text--filter__count {
           height: 20px;
           width: 20px;
           background-color: rgb(21, 111, 247);
           color: white;
           border-radius: 10px;
           font-size: 14px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
         }
-        .sidebar__filter {
+        .sidebar__body {
           padding: 20px 30px;
           gap: 20px;
           overflow-y: scroll;
           height: calc(100dvh - 140px);
+          display: flex;
+          flex-direction: column;
         }
-        .sidebar__filter__bymember {
+        .sidebar__body__filter {
           height: 160px;
           width: 100%;
           border-bottom: 0.5px solid rgb(203, 213, 225);
+          display: flex;
+          flex-direction: column;
         }
         .sidebar__filter__byregion {
           height: 140px;
@@ -177,10 +196,13 @@ const Sidebar = ({ data, roleData, location }: SidebarProps) => {
           gap: 16px;
           border-bottom: 0.5px solid rgb(203, 213, 225);
         }
-        .filter__bymember__option {
+        .sidebar__body__filter__option {
           font-size: 14.5px;
           color: rgb(71, 85, 105);
           margin-bottom: 16px;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
         }
         ::-webkit-scrollbar {
           width: 6px;

@@ -1,39 +1,50 @@
-import React, { useState } from "react";
+let selectedSkills: string[] = [];
+let updatedSkills: string[] = [];
+
+import React, { useEffect, useState } from "react";
 import Button from "../../ui/button/Button";
 import { useRouter, useSearchParams } from "next/navigation";
 
 interface MemberSkillsProps {
   item: string;
   setCount: (e: any) => void;
+  count: number;
 }
 
-const SkillCard = ({ item, setCount }: MemberSkillsProps) => {
+const SkillCard = ({ item, setCount, count }: MemberSkillsProps) => {
   const [isSelected, setIsSelected] = useState<boolean>(false);
   const router = useRouter();
   const searchParams = useSearchParams();
   const currentParams = new URLSearchParams(searchParams.toString());
+
   const handleSelectFilter = (name: string) => {
-    setIsSelected((prev) => !prev);
     const currentSkills = searchParams.get("skills")?.split("|") || [];
-    if (!currentSkills.includes(name)) {
-      currentSkills.push(name);
+    if (!isSelected) {
+      selectedSkills.push(name);
+      updatedSkills = [...currentSkills, ...selectedSkills];
       setCount((prev: number) => prev + 1);
     } else {
-      const updatedSkills = currentSkills.filter((role) => role !== name);
-      currentSkills.length = 0;
-      currentSkills.push(...updatedSkills);
+      updatedSkills.splice(updatedSkills.indexOf(name), 1);
+      selectedSkills.splice(selectedSkills.indexOf(name), 1);
       setCount((prev: number) => prev - 1);
     }
-    if (currentSkills.length > 0) {
-      currentParams.set("skills", currentSkills.join("|"));
+    if (updatedSkills.length > 0) {
+      currentParams.set("skills", updatedSkills.join("|"));
     } else {
       currentParams.delete("skills");
     }
     router.push(`?${currentParams.toString()}`);
+    setIsSelected((prev) => !prev);
   };
+
+  useEffect(() => {
+    if (count === 0) {
+      setIsSelected(false);
+    }
+  }, [count]);
+
   return (
     <div className="filter flex">
-      {}
       <Button
         className={
           isSelected ? "filter__name__skill--selected" : "filter__name__skill"

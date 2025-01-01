@@ -1,7 +1,7 @@
 import RoleCard from "@/components/page/card/RoleCard";
 import TextField from "@/components/ui/textfield/TextField";
 import { RoleType } from "@/types/roleType";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import React, { useState } from "react";
 interface RolesProps {
   roles: RoleType[];
@@ -9,12 +9,20 @@ interface RolesProps {
   getRoles: (value?: string) => void;
 }
 const Roles = ({ roles, setCount, getRoles }: RolesProps) => {
+  const router = useRouter();
   const searchParams = useSearchParams();
+  const currentParams = new URLSearchParams(searchParams.toString());
   const [search, setSearch] = useState<string>("");
 
   const handleSearch = (value: string) => {
     getRoles(value);
     setSearch(value);
+  };
+
+  const handleSelectAll = () => {
+    const currentRoles = roles.map((role) => role.role); 
+    currentParams.set("memberRoles", currentRoles.join("|"));
+    router.push(`?${currentParams.toString()}`);
   };
 
   return (
@@ -41,8 +49,11 @@ const Roles = ({ roles, setCount, getRoles }: RolesProps) => {
               type="checkbox"
               className="role-filter__hidden__roles__checkbox"
               checked={searchParams.get("memberRoles") === "true"}
+              onChange={handleSelectAll}
             />
-            <span className="card__roleBased__name">Select All</span>
+            <span className="role-filter__hidden__roles__heading">
+              Select All
+            </span>
           </div>
           {roles.map((role, index: number) => (
             <RoleCard key={index} role={role} setCount={setCount} />
@@ -93,9 +104,14 @@ const Roles = ({ roles, setCount, getRoles }: RolesProps) => {
           display: flex;
           flex-direction: column;
         }
+        .role-filter__hidden {
+          height: 150px;
+          overflow-y: scroll;
+        }
         .role-filter__hidden__roles {
           display: flex;
           align-items: center;
+          gap: 8px;
         }
         :global(.role-filter__hidden__roles__checkbox) {
           appearance: none;
@@ -107,6 +123,11 @@ const Roles = ({ roles, setCount, getRoles }: RolesProps) => {
         :global(.role-filter__hidden__roles__checkbox:checked) {
           border: 1px solid #156ff7;
           background-color: #156ff7;
+        }
+        .role-filter__hidden__roles__heading {
+          font-size: 12px;
+          font-weight: 500;
+          line-height: 14px;
         }
       `}</style>
     </div>
