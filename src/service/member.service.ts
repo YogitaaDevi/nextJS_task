@@ -36,14 +36,12 @@ export const fetchMembers = async (
         appliedFilters.sortBy === "desc" ? "-" : ""
       }${appliedFilters.sortField?.toLowerCase()}`,
     };
-    console.log(filterQuery.memberRoles);
     const queryString = Object.entries(filterQuery)
       .map(
         ([key, value]) =>
           `${encodeURIComponent(key)}=${encodeURIComponent(value as string)}`
       )
       .join("&");
-    console.log(queryString, "-------------------querystring");
     const response = await fetch(
       `${BASE_URL}?pagination=true&page=${pageNumber}&limit=${PAGE_LIMIT}&select=uid,name,location,skills,officeHours,openToWork,plnFriend,isFeatured,memberRoles${
         queryString.length && `&${queryString}`
