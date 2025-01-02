@@ -39,30 +39,6 @@ a {
   color: inherit;
   text-decoration: none;
 }
-.flex{
-  display: flex;
-}
-.flex-wrap{
-  flex-wrap: wrap;
-}
-.items-center{
-  align-items: center;
-}
-.justify-center{
-  justify-content: center;
-}
-.justify-around{
-  justify-content: space-around;
-}
-.justify-between{
-  justify-content: space-between;
-}
-.items-baseline{
-  align-items: baseline;
-}
-.flex-col{
-  flex-direction: column;
-}
 @media (prefers-color-scheme: dark) {
   html {
     color-scheme: dark;

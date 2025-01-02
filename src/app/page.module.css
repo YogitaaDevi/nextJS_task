@@ -68,10 +68,7 @@
   padding: 0 20px;
   border: none;
   border: 1px solid transparent;
-  transition:
-    background 0.2s,
-    color 0.2s,
-    border-color 0.2s;
+  transition: background 0.2s, color 0.2s, border-color 0.2s;
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -165,4 +162,17 @@ a.secondary {
   .logo {
     filter: invert();
   }
+}
+.main__layout {
+  width: 100%;
+  margin-top: 80px;
+  overflow-y: hidden;
+  display: flex;
+}
+.main__layout__membersSide {
+  gap: 20px;
+  margin-left: 300px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
 }

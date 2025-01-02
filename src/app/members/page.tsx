@@ -1,7 +1,7 @@
 import React from "react";
 import Header from "@/components/core/header/Header";
 import Sidebar from "@/components/core/sidebar/Sidebar";
-import "./page.module.css";
+import styles from "./page.module.css";
 import {
   fetchFilters,
   fetchMembers,
@@ -60,9 +60,9 @@ const page = async ({ searchParams }: any) => {
   return (
     <>
       <Header />
-      <div className="main__layout">
+      <div className={styles.main__layout}>
         <Sidebar data={filters} roleData={roleData} location={location} />
-        <div className="main__layout__membersSide">
+        <div className={styles.main__layout__membersSide}>
           <MembersPage data={currentMembers} appliedFilters={appliedFilters} />
         </div>
       </div>
