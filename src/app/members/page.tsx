@@ -1,7 +1,7 @@
 import React from "react";
 import Header from "@/components/core/header/Header";
 import Sidebar from "@/components/core/sidebar/Sidebar";
-import "./style.css";
+import "./page.module.css";
 import {
   fetchFilters,
   fetchMembers,
@@ -46,24 +46,24 @@ const page = async ({ searchParams }: any) => {
   const getData = async (): Promise<{
     filters: FilterType;
     roleData: RoleType[];
-    members: MemberResponseType;
+    currentMembers: MemberResponseType;
     location: LocationType[];
   }> => {
     const filters = await fetchFilters();
     const roleData = await fetchRoles();
-    const members = await fetchMembers(appliedFilters);
+    const currentMembers = await fetchMembers(appliedFilters);
 
-    const location = members.members.map((member) => member.location);
-    return { filters, roleData, members, location };
+    const location = currentMembers.members.map((member) => member.location);
+    return { filters, roleData, currentMembers, location };
   };
-  const { filters, roleData, members, location } = await getData();
+  const { filters, roleData, currentMembers, location } = await getData();
   return (
     <>
       <Header />
       <div className="main__layout">
         <Sidebar data={filters} roleData={roleData} location={location} />
         <div className="main__layout__membersSide">
-          <MembersPage data={members} appliedFilters={appliedFilters} />
+          <MembersPage data={currentMembers} appliedFilters={appliedFilters} />
         </div>
       </div>
     </>

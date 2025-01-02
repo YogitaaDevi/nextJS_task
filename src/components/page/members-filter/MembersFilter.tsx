@@ -200,7 +200,8 @@ const MembersFilter = ({ count }: MembersFilterProps) => {
         }
         .member-view__header__right {
           display: flex;
-          justify-content: space-between;
+          gap: 12px;
+          margin-left: 10px;
         }
         .member-view__header__left__text {
           font-size: 30px;

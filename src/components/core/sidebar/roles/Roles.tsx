@@ -14,6 +14,7 @@ const Roles = ({ roles, setCount, getRoles }: RolesProps) => {
   const searchParams = useSearchParams();
   const currentParams = new URLSearchParams(searchParams.toString());
   const [search, setSearch] = useState<string>("");
+  let currentRoles: string[];
 
   const handleSearch = (value: string) => {
     setSearch(value);
@@ -24,9 +25,14 @@ const Roles = ({ roles, setCount, getRoles }: RolesProps) => {
     role.role.toLowerCase().includes(search.toLowerCase())
   );
 
-  const handleSelectAll = () => {
-    const currentRoles = filteredRoles.map((role) => role.role);
-    currentParams.set("memberRoles", currentRoles.join("|"));
+  const handleSelectAll = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const isChecked = e.target.checked;
+    if (isChecked) {
+      currentRoles = filteredRoles.map((role) => role.role);
+      currentParams.set("memberRoles", currentRoles.join("|"));
+    } else {
+      currentParams.delete("memberRoles");
+    }
     router.push(`?${currentParams.toString()}`);
   };
 
@@ -44,7 +50,9 @@ const Roles = ({ roles, setCount, getRoles }: RolesProps) => {
           value={search}
           className="role-filter__search__input"
           placeholder="Search Role [eg. Engineer]"
-          onChange={(e: any) => handleSearch(e.target.value)}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+            handleSearch(e.target.value)
+          }
         />
       </div>
       {search.length > 0 ? (
@@ -55,7 +63,9 @@ const Roles = ({ roles, setCount, getRoles }: RolesProps) => {
                 <TextField
                   type="checkbox"
                   className="role-filter__hidden__roles__checkbox"
-                  onChange={handleSelectAll}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                    handleSelectAll(e)
+                  }
                 />
                 <span className="role-filter__hidden__roles__heading">
                   Select All

@@ -37,7 +37,7 @@ const RoleCard = ({ role, setCount }: RoleCardProps) => {
     }
     router.push(`?${currentParams.toString()}`);
   };
-console.log(searchParams.get("memberRoles")?.split('|'));
+  console.log(currentRoles.includes(role.role));
   return (
     <div className="card__roleBased">
       <TextField
@@ -46,10 +46,7 @@ console.log(searchParams.get("memberRoles")?.split('|'));
         onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
           handleFilterByRole(role.role, e)
         }
-        checked={searchParams
-          .get("memberRoles")
-          ?.split("|")
-          .includes(role.role)}
+        checked={currentRoles.includes(role.role)}
       />
       {role.alias ? (
         <>

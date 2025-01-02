@@ -82,11 +82,11 @@ const MembersPage = ({ data, appliedFilters }: MembersPageProps) => {
           </div>
         )}
         {!hasMore && currentMembers.length === 0 ? (
-          <div className="display__loader">
+          <div className="display__members__loader">
             <NotFound />
           </div>
         ) : (
-          <div ref={observerRef} className="display__loader">
+          <div ref={observerRef} className="display__members__loader">
             {hasMore && <Loader />}
           </div>
         )}
@@ -109,7 +109,7 @@ const MembersPage = ({ data, appliedFilters }: MembersPageProps) => {
           flex-direction: column;
           gap: 20px;
         }
-        .display__loader {
+        .display__members__loader {
           width: 100%;
           display: flex;
           align-items: center;
