@@ -7,9 +7,10 @@ import React, { useState } from "react";
 interface CountriesProps {
   data: FilterType;
   location: LocationType[];
+  setCount: (e: any) => void
 }
 
-const Countries = ({ data, location }: CountriesProps) => {
+const Countries = ({ data, location, setCount }: CountriesProps) => {
   const [isCountriesVisible, setIsCountriesVisible] = useState<boolean>(false);
 
   const membersCountry = location.map(
@@ -25,10 +26,12 @@ const Countries = ({ data, location }: CountriesProps) => {
                 <RegionCard
                   item={item}
                   key={index}
+                  setCount={setCount}
+                  paramName="country"
                   className={
                     membersCountry.includes(item)
-                      ? "filter__name--highlighted"
-                      : "filter__name"
+                      ? "filter__name"
+                      : "filter__name--disable"
                   }
                 />
               ))
@@ -38,10 +41,12 @@ const Countries = ({ data, location }: CountriesProps) => {
                   <RegionCard
                     item={item}
                     key={index}
+                    setCount={setCount}
+                    paramName="country"
                     className={
                       membersCountry.includes(item)
-                        ? "filter__name--highlighted"
-                        : "filter__name"
+                        ? "filter__name"
+                        : "filter__name--disable"
                     }
                   />
                 ))}

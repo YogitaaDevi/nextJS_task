@@ -25,6 +25,9 @@ const page = async ({ searchParams }: any) => {
       memberRoles,
       skills,
       searchBy = "",
+      region,
+      metroArea,
+      country,
     } = await searchParams;
     const sortByValue = sort || "";
     const [sortField, sortBy] = sortByValue.split(",");
@@ -39,6 +42,9 @@ const page = async ({ searchParams }: any) => {
         typeof memberRoles === "string" ? memberRoles.split("|") : [],
       skills: typeof skills === "string" ? skills.split("|") : [],
       searchBy: searchBy || "",
+      region: typeof region === "string" ? region.split("|") : [],
+      metroArea: typeof metroArea === "string" ? metroArea.split("|") : [],
+      country: typeof country === "string" ? country.split("|") : [],
     };
   };
   const appliedFilters = await filterChange();

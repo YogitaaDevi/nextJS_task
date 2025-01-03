@@ -6,9 +6,10 @@ import React from "react";
 interface RegionsProps {
   data: FilterType;
   location: LocationType[];
+  setCount: (e: any) => void
 }
 
-const Regions = ({ data, location }: RegionsProps) => {
+const Regions = ({ data, location, setCount }: RegionsProps) => {
   const membersRegion = location.map(
     (region: LocationType) => region?.continent
   );
@@ -20,10 +21,12 @@ const Regions = ({ data, location }: RegionsProps) => {
           <RegionCard
             item={item}
             key={index}
+            setCount={setCount}
+            paramName="region"
             className={
               membersRegion.includes(item)
-                ? "filter__name--highlighted"
-                : "filter__name"
+                ? "filter__name"
+                : "filter__name--disable"
             }
           />
         ))}

@@ -8,4 +8,7 @@ export interface MemberFilterType {
   sortBy?: string;
   skills?: string[];
   searchBy?: string;
+  region?: string[];
+  country?: string[];
+  metroArea? : string[]
 }

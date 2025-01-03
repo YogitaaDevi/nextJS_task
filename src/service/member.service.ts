@@ -3,7 +3,6 @@ import { FilterType } from "@/types/filterType";
 import { MemberFilterType } from "@/types/memberFilterType";
 import { MemberResponseType } from "@/types/memberResponseType";
 import { RoleType } from "@/types/roleType";
-import { useSearchParams } from "next/navigation";
 
 const BASE_URL = `${process.env.NEXT_PUBLIC_DIRECTORY_API_URL}/v1/members`;
 
@@ -16,6 +15,7 @@ export const fetchMembers = async (
       if (values && Array.isArray(values)) return values.join(",");
       return [];
     };
+
     const filterQuery = {
       ...(appliedFilters.officeHoursOnly ? { officeHours__not: "null" } : {}),
       ...(appliedFilters.includeFriends
@@ -29,6 +29,27 @@ export const fetchMembers = async (
       ...(appliedFilters.searchBy
         ? { name__icontains: appliedFilters.searchBy.trim() }
         : {}),
+      ...(appliedFilters.region
+        ? {
+            "location.continent__with": stringifyQueryValues(
+              appliedFilters.region
+            ),
+          }
+        : {}),
+      ...(appliedFilters.country
+        ? {
+            "location.country__with": stringifyQueryValues(
+              appliedFilters.country
+            ),
+          }
+        : {}),
+      ...(appliedFilters.metroArea
+        ? {
+            "location.city__with": stringifyQueryValues(
+              appliedFilters.metroArea
+            ),
+          }
+        : {}),
       ...(appliedFilters.skills?.length
         ? { "skills.title__with": stringifyQueryValues(appliedFilters.skills) }
         : {}),
@@ -36,12 +57,14 @@ export const fetchMembers = async (
         appliedFilters.sortBy === "desc" ? "-" : ""
       }${appliedFilters.sortField?.toLowerCase()}`,
     };
+
     const queryString = Object.entries(filterQuery)
       .map(
         ([key, value]) =>
           `${encodeURIComponent(key)}=${encodeURIComponent(value as string)}`
       )
       .join("&");
+
     const response = await fetch(
       `${BASE_URL}?pagination=true&page=${pageNumber}&limit=${PAGE_LIMIT}&select=uid,name,location,skills,officeHours,openToWork,plnFriend,isFeatured,memberRoles${
         queryString.length && `&${queryString}`

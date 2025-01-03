@@ -21,7 +21,7 @@ const MemberGridView = ({ member }: CardProps) => {
         />
       </div>
       <div className="grid-view__details">
-        <div className="grid-view__details__personal flex flex-col items-center">
+        <div className="grid-view__details__personal">
           <p>{member.name}</p>
           <p>Place</p>
           <p>Job</p>
@@ -43,13 +43,18 @@ const MemberGridView = ({ member }: CardProps) => {
           text-align: center;
           box-shadow: 0px 0px 4px rgb(224, 224, 224);
         }
-
+        .grid-view:hover {
+          -webkit-box-shadow:0px 0px 0px 2px#156ff740
+        }
         .grid-view__profile {
           width: 100%;
           height: 90px;
           border-bottom: 0.5px solid rgb(203, 213, 225);
           overflow: clip;
           padding: 0 85px;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
         }
 
         .grid-view__profile__img {
@@ -76,6 +81,8 @@ const MemberGridView = ({ member }: CardProps) => {
 
         .grid-view__details__skills {
           margin-top: 12px;
+          display: flex;
+          justify-content: flex-start;
         }
       `}</style>
     </div>

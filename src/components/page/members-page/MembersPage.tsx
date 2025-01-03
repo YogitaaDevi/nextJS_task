@@ -4,13 +4,13 @@ import { MemberType } from "@/types/memberType";
 import MemberGridView from "../card/MemberGridView";
 import Loader from "../../ui/loader/Loader";
 import useInfinityScroll from "@/hooks/useInfinityScroll";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { fetchMembers } from "@/service/member.service";
 import { MemberResponseType } from "@/types/memberResponseType";
 import { MemberFilterType } from "@/types/memberFilterType";
 import MembersFilter from "../members-filter/MembersFilter";
-import NotFound from "../not-found/NotFound";
+import NotFound from "../../ui/not-found/NotFound";
 import MemberListView from "../card/MemberListView";
 
 interface MembersPageProps {
@@ -19,12 +19,10 @@ interface MembersPageProps {
 }
 
 const MembersPage = ({ data, appliedFilters }: MembersPageProps) => {
-  const [currentMembers, setCurrentMembers] = useState<MemberType[]>(
-    data.members
-  );
+  const membersRef = useRef<MemberType[]>([...data.members]);
   const [hasMore, setHasMore] = useState<boolean>(true);
   const [loading, setLoading] = useState<boolean>(false);
-  const [count, setCount] = useState<number>(0);
+  const [count, setCount] = useState<number>(data.count || 0);
   const searchParams = useSearchParams();
   const { observerRef, page, setPage } = useInfinityScroll(hasMore, loading);
   const viewType = searchParams.get("viewType");
@@ -35,12 +33,12 @@ const MembersPage = ({ data, appliedFilters }: MembersPageProps) => {
     try {
       const response: MemberResponseType = await fetchMembers(
         appliedFilters,
-        page
+        pageNo
       );
       if (response.members.length > 0) {
-        setCurrentMembers((prev) => [...prev, ...response.members]);
+        membersRef.current.push(...response.members);
         setCount(response.count);
-        if (currentMembers.length + response.members.length >= response.count) {
+        if (membersRef.current.length >= response.count) {
           setHasMore(false);
         }
       } else {
@@ -54,8 +52,8 @@ const MembersPage = ({ data, appliedFilters }: MembersPageProps) => {
   };
 
   useEffect(() => {
-    setCurrentMembers([]);
-    setCount(0);
+    membersRef.current = [];
+    setCount(data.count || 0);
     setHasMore(true);
     setPage(1);
   }, [searchParams]);
@@ -70,18 +68,18 @@ const MembersPage = ({ data, appliedFilters }: MembersPageProps) => {
       <div className="display__members">
         {viewType === "List" ? (
           <div className="display__members__list">
-            {currentMembers.map((user: MemberType) => (
+            {membersRef.current.map((user: MemberType) => (
               <MemberListView key={user.uid} member={user} />
             ))}
           </div>
         ) : (
           <div className="display__members__grid">
-            {currentMembers.map((user: MemberType) => (
+            {membersRef.current.map((user: MemberType) => (
               <MemberGridView key={user.uid} member={user} />
             ))}
           </div>
         )}
-        {!hasMore && currentMembers.length === 0 ? (
+        {!hasMore && membersRef.current.length === 0 ? (
           <div className="display__members__loader">
             <NotFound />
           </div>

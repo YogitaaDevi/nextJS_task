@@ -122,11 +122,11 @@ const Sidebar = ({ data, roleData, location }: SidebarProps) => {
             </label>
           </div>
         </div>
-        <Regions data={data} location={location} />
+        <Regions data={data} location={location} setCount={setCount} />
         <Roles roles={roles} setCount={setCount} getRoles={getRoles} />
-        <Countries data={data} location={location} />
+        <Countries data={data} location={location} setCount={setCount} />
         <Skills data={data} setCount={setCount} count={count} />
-        <MetroAreas data={data} location={location} />
+        <MetroAreas data={data} location={location} setCount={setCount} />
       </div>
       <style jsx>{`
         .sidebar {

@@ -37,7 +37,6 @@ const RoleCard = ({ role, setCount }: RoleCardProps) => {
     }
     router.push(`?${currentParams.toString()}`);
   };
-  console.log(currentRoles.includes(role.role));
   return (
     <div className="card__roleBased">
       <TextField

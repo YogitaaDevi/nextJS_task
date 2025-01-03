@@ -311,7 +311,7 @@ const MembersFilter = ({ count }: MembersFilterProps) => {
         .view-type__list:hover,
         .view-type__list--active:hover {
           border-radius: 0 10px 10px 0;
-          border: 2px solid rgb(131, 175, 246);
+          -webkit-box-shadow:0px 0px 0px 2px#156ff740
         }
         .view-type__list--active {
           background-color: rgb(219, 234, 254);

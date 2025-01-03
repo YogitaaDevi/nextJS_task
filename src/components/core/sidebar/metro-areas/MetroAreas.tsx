@@ -7,9 +7,10 @@ import React, { useState } from "react";
 interface MetroAreasProps {
   data: FilterType;
   location: LocationType[];
+  setCount: (e: any) => void;
 }
 
-const MetroAreas = ({ data, location }: MetroAreasProps) => {
+const MetroAreas = ({ data, location, setCount }: MetroAreasProps) => {
   const [isMetroAreaVisible, setIsMetroAreaVisible] = useState<boolean>(false);
 
   const membersArea = location.map((region: LocationType) => region?.metroArea);
@@ -24,10 +25,12 @@ const MetroAreas = ({ data, location }: MetroAreasProps) => {
                 <RegionCard
                   item={item}
                   key={index}
+                  setCount={setCount}
+                  paramName="metroArea"
                   className={
                     membersArea.includes(item)
-                      ? "filter__name--highlighted"
-                      : "filter__name"
+                      ? "filter__name"
+                      : "filter__name--disable"
                   }
                 />
               ))
@@ -37,10 +40,12 @@ const MetroAreas = ({ data, location }: MetroAreasProps) => {
                   <RegionCard
                     item={item}
                     key={index}
+                    setCount={setCount}
+                    paramName="metroArea"
                     className={
                       membersArea.includes(item)
-                        ? "filter__name--highlighted"
-                        : "filter__name"
+                        ? "filter__name"
+                        : "filter__name--disable"
                     }
                   />
                 ))}
