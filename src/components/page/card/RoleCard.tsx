@@ -1,4 +1,7 @@
-import React, { useState } from "react";
+let selectedRoles: string[] = [];
+let updatedRoles: string[] = [];
+
+import React from "react";
 import TextField from "../../ui/textfield/TextField";
 import { RoleType } from "@/types/roleType";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -15,24 +18,21 @@ const RoleCard = ({ role, setCount }: RoleCardProps) => {
   const currentRoles = currentParams.get("memberRoles")?.split("|") || [];
 
   const handleFilterByRole = (
-    filter: string,
+    name: string,
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
-    const isChecked = event.target.checked;
-    if (isChecked) {
-      if (!currentRoles.includes(filter)) {
-        currentRoles.push(filter);
-      }
-      setCount((prev: number) => prev + 1);
-    } else {
-      const updatedRoles = currentRoles.filter((role) => role !== filter);
-      currentRoles.length = 0;
-      currentRoles.push(...updatedRoles);
+    if (selectedRoles.includes(name)) {
+      updatedRoles.splice(updatedRoles.indexOf(name), 1);
+      selectedRoles.splice(selectedRoles.indexOf(name), 1);
+      currentParams.set("memberRoles", updatedRoles.join("|"));
       setCount((prev: number) => prev - 1);
-    }
-    if (currentRoles.length > 0) {
-      currentParams.set("memberRoles", currentRoles.join("|"));
     } else {
+      selectedRoles.push(name);
+      updatedRoles = [...currentRoles, ...selectedRoles];
+      currentParams.set("memberRoles", updatedRoles.join("|"));
+      setCount((prev: number) => prev + 1);
+    }
+    if (updatedRoles.length === 0) {
       currentParams.delete("memberRoles");
     }
     router.push(`?${currentParams.toString()}`);
