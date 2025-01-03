@@ -14,7 +14,7 @@ const Regions = ({ data, location, setCount }: RegionsProps) => {
     (region: LocationType) => region?.continent
   );
   return (
-    <div className="region-filter flex flex-col">
+    <div className="region-filter">
       <div className="region-filter__heading">Region</div>
       <div className="region-filter__regions">
         {data.regions.map((item: string, index: number) => (

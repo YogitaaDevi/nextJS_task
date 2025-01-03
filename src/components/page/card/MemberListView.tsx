@@ -19,7 +19,7 @@ const MemberListView = ({ member }: ListCardProps) => {
           alt=""
           className="list-view__profile__img"
         />
-        <div className="flex-col list-view__profile__details">
+        <div className="list-view__profile__details">
           <p className="list-view__profile__details__name">{member.name}</p>
           <div className="list-view__profile__details">
             <p>place</p>
@@ -61,6 +61,7 @@ const MemberListView = ({ member }: ListCardProps) => {
         .list-view__profile__details {
           gap: 6px;
           display: flex;
+          flex-direction: column;
         }
 
         .list-view__profile__details__name {

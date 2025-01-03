@@ -4,7 +4,7 @@ import React from "react";
 const Loader = () => {
   return (
     <>
-      <div className="loader flex items-center justify-center">
+      <div className="loader">
         <div className="loader__circle"></div>
         <p>Loading Members...</p>
       </div>
@@ -12,6 +12,9 @@ const Loader = () => {
         .loader {
           gap: 8px;
           margin-bottom: 10px;
+          display: flex;
+          justify-content: center;
+          align-items: center;
         }
         .loader__circle {
           border: 3px solid rgba(0, 0, 0, 0.2);

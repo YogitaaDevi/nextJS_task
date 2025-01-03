@@ -261,16 +261,17 @@ const MembersFilter = ({ count }: MembersFilterProps) => {
         header__right__sort__order p {
           font-size: 14px;
         }
-        .sort__order__visible--active,
-        .sort__order__visible--inactive {
+        .sort__order__visible--inactive,
+        .sort__order__visible--active {
           align-items: center;
           display: flex;
           height: 40px;
           padding: 5px;
           gap: 5px;
+          width: 100%;
           font-size: 14px;
         }
-        .sort__order__visible--inactive {
+        .sort__order__visible--active {
           background-color: rgb(21, 111, 247);
           color: white;
           border-radius: 5px;
