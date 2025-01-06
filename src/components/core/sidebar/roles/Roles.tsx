@@ -151,11 +151,24 @@ const Roles = ({ roles, setCount, getRoles }: RolesProps) => {
           width: 20px;
           border: 1px solid #e5e7eb;
           border-radius: 5px;
+          cursor: pointer;
         }
+
         :global(.role-filter__hidden__roles__checkbox:checked) {
-          border: 1px solid #156ff7;
-          background-color: #156ff7;
+          background-color: #2563eb;
+          position: relative;
         }
+
+        :global(.role-filter__hidden__roles__checkbox:checked::after) {
+          content: "✔";
+          color: white;
+          font-size: 14px;
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+        }
+          
         .role-filter__hidden__roles__heading {
           font-size: 12px;
           font-weight: 500;

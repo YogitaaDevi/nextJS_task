@@ -8,14 +8,15 @@ import { useRouter, useSearchParams } from "next/navigation";
 interface MemberSkillsProps {
   item: string;
   setCount: (e: any) => void;
-  count: number;
+  paramName: string;
 }
 
-const SkillCard = ({ item, setCount, count }: MemberSkillsProps) => {
+const SkillCard = ({ item, setCount, paramName }: MemberSkillsProps) => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const currentParams = new URLSearchParams(searchParams.toString());
-  const currentSkills = searchParams.get("skills")?.split("|") || [];
+  const currentSkills =
+    searchParams.get(paramName.toLowerCase())?.split("|") || [];
 
   const handleSelectFilter = (name: string) => {
     if (selectedSkills.includes(name)) {
@@ -26,15 +27,14 @@ const SkillCard = ({ item, setCount, count }: MemberSkillsProps) => {
     } else {
       selectedSkills.push(name);
       updatedSkills = [...currentSkills, ...selectedSkills];
-      currentParams.set("skills", updatedSkills.join("|"));
+      currentParams.set(paramName.toLowerCase(), updatedSkills.join("|"));
       setCount((prev: number) => prev + 1);
     }
     if (updatedSkills.length === 0) {
-      currentParams.delete("skills");
+      currentParams.delete(paramName.toLowerCase());
     }
     router.push(`?${currentParams.toString()}`);
   };
-
 
   return (
     <div className="filter">
@@ -62,6 +62,9 @@ const SkillCard = ({ item, setCount, count }: MemberSkillsProps) => {
           margin-bottom: 8px;
           background-color: white;
           cursor: pointer;
+        }
+        :global(.filter__name__skill:hover) {
+          border: 1px solid rgb(145, 145, 146);
         }
         :global(.filter__name__skill--selected) {
           height: 25px;

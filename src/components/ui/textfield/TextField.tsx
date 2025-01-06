@@ -18,6 +18,7 @@ const TextField = ({
   placeholder = "",
   onClick,
   onKeyDown,
+  checked
 }: TextFieldProps) => {
   return (
     <input
@@ -27,6 +28,7 @@ const TextField = ({
       placeholder={placeholder}
       onClick={onClick}
       onKeyDown={onKeyDown}
+      checked={checked}
     />
   );
 };

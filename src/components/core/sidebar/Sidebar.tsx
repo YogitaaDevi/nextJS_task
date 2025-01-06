@@ -5,11 +5,8 @@ import TextField from "../../ui/textfield/TextField";
 import { FilterType } from "@/types/filterType";
 import { RoleType } from "@/types/roleType";
 import { fetchRoles } from "@/service/member.service";
-import Skills from "./skills/Skills";
-import MetroAreas from "./metro-areas/MetroAreas";
-import Regions from "./regions/Regions";
+import RegionsAndSkills from "./region-skill-filter/RegionsAndSkills";
 import Roles from "./roles/Roles";
-import Countries from "./countries/Countries";
 import { LocationType } from "@/types/locationType";
 
 interface SidebarProps {
@@ -32,6 +29,17 @@ const Sidebar = ({ data, roleData, location }: SidebarProps) => {
     setRoles(response);
   };
 
+  const membersRegion = location.map(
+    (region: LocationType) => region?.continent
+  );
+  const membersCountry = location.map(
+    (region: LocationType) => region?.country
+  );
+  const membersMetroArea = location
+    .map((region: LocationType) => region?.metroArea)
+    .filter((metroArea): metroArea is string => metroArea !== null);
+
+  console.log(membersRegion, membersCountry, membersMetroArea);
   const handleFilterChange = (
     filter: string,
     event: React.ChangeEvent<HTMLInputElement>
@@ -52,16 +60,13 @@ const Sidebar = ({ data, roleData, location }: SidebarProps) => {
     router.push(`?`);
     setCount(0);
   };
-
   return (
     <div className="sidebar">
       <div className="sidebar__header">
         <div className="sidebar__header__text">
           <h3 className="sidebar__header__text--filter">Filters</h3>
           {count > 0 && (
-            <div className="sidebar__header__text--filter__count">
-              {count}
-            </div>
+            <div className="sidebar__header__text--filter__count">{count}</div>
           )}
         </div>
         <div
@@ -122,11 +127,31 @@ const Sidebar = ({ data, roleData, location }: SidebarProps) => {
             </label>
           </div>
         </div>
-        <Regions data={data} location={location} setCount={setCount} />
+
+        <RegionsAndSkills
+          data={data.regions}
+          location={membersRegion}
+          setCount={setCount}
+          name="Region"
+        />
         <Roles roles={roles} setCount={setCount} getRoles={getRoles} />
-        <Countries data={data} location={location} setCount={setCount} />
-        <Skills data={data} setCount={setCount} count={count} />
-        <MetroAreas data={data} location={location} setCount={setCount} />
+        <RegionsAndSkills
+          data={data.countries}
+          location={membersCountry}
+          setCount={setCount}
+          name="Country"
+        />
+        <RegionsAndSkills
+          data={data.skills}
+          setCount={setCount}
+          name="Skills"
+        />
+        <RegionsAndSkills
+          data={data.metroAreas}
+          location={membersMetroArea}
+          setCount={setCount}
+          name="Metro Area"
+        />
       </div>
       <style jsx>{`
         .sidebar {

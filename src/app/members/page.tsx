@@ -58,8 +58,9 @@ const page = async ({ searchParams }: any) => {
     const filters = await fetchFilters();
     const roleData = await fetchRoles();
     const currentMembers = await fetchMembers(appliedFilters);
-
+    console.log(currentMembers);
     const location = currentMembers.members.map((member) => member.location);
+    console.log(location);
     return { filters, roleData, currentMembers, location };
   };
   const { filters, roleData, currentMembers, location } = await getData();

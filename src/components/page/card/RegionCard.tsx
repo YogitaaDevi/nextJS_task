@@ -1,5 +1,4 @@
-let selectedFilter: string[] = [];
-let updatedFilter: string[] = [];
+"use client";
 
 import React from "react";
 import Button from "../../ui/button/Button";
@@ -12,35 +11,45 @@ interface RegionCardProps {
   paramName: string;
 }
 
-const RegionCard = ({ item, className, setCount, paramName }: RegionCardProps) => {
+const RegionCard = ({
+  item,
+  className = "",
+  setCount,
+  paramName,
+}: RegionCardProps) => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const currentParams = new URLSearchParams(searchParams.toString());
-  const currentFilter = searchParams.get(paramName)?.split("|") || [];
 
   const handleSelectedRegion = (name: string) => {
-    if (selectedFilter.includes(name)) {
-      updatedFilter.splice(updatedFilter.indexOf(name), 1);
-      selectedFilter.splice(selectedFilter.indexOf(name), 1);
-      currentParams.set(paramName, updatedFilter.join("|"));
+    const currentValues = currentParams.getAll(paramName.toLowerCase());
+    const isAlreadySelected = currentValues.includes(name);
+    if (isAlreadySelected) {
+      const updatedValues = currentValues.filter((value) => value !== name);
+      currentParams.delete(paramName.toLowerCase());
+      updatedValues.forEach((value) =>
+        currentParams.append(paramName.toLowerCase(), value)
+      );
       setCount((prev: number) => prev - 1);
     } else {
-      selectedFilter.push(name);
-      updatedFilter = [...currentFilter, ...selectedFilter];
-      currentParams.set(paramName, updatedFilter.join("|"));
+      currentParams.append(paramName.toLowerCase(), name);
       setCount((prev: number) => prev + 1);
-    }
-    if (updatedFilter.length === 0) {
-      currentParams.delete(paramName);
     }
     router.push(`?${currentParams.toString()}`);
   };
-
+  const isSelected = currentParams
+    .getAll(paramName.toLowerCase())
+    .includes(item);
+console.log(paramName)
   return (
     <div className="filter">
       <Button
         className={
-          currentFilter.includes(item) ? "filter__name--selected" : className
+          className.length > 0
+            ? className
+            : isSelected
+            ? "filter__name--selected"
+            : "filter__name"
         }
         name={item}
         onClick={() => handleSelectedRegion(item)}
@@ -73,6 +82,9 @@ const RegionCard = ({ item, className, setCount, paramName }: RegionCardProps) =
           background-color: rgb(248, 250, 252);
           color: rgb(108, 123, 145);
           cursor: pointer;
+        }
+        :global(.filter__name__skill:hover) {
+          border: 1px solid rgb(145, 145, 146);
         }
         :global(.filter__name--selected) {
           height: 25px;

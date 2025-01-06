@@ -61,7 +61,7 @@ const MembersPage = ({ data, appliedFilters }: MembersPageProps) => {
   useEffect(() => {
     if (hasMore) getMembers(page);
   }, [page]);
-
+  console.log(data);
   return (
     <>
       <MembersFilter count={count} />
